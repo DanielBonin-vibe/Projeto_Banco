@@ -8,3 +8,11 @@ class Cliente:
         self.cpf = cpf
 
         Cliente.id_cliente += 1
+
+    def to_dict(self):
+        return{
+            'nome': self.nome,
+            'idade': self.idade,
+            'cpf': self.cpf,
+            'id_cliente': self.id_cliente
+        }

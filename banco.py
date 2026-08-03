@@ -1,5 +1,6 @@
 from cliente import Cliente
 from conta import Conta
+from json_utils import salvar_json
 
 class Banco:
     def __init__(self):
@@ -18,6 +19,14 @@ class Banco:
         else:
             cliente = Cliente(nome, idade, cpf)
             self.lista_clientes.append(cliente)
+
+            lista_clientes = [] # Criamos uma lista nova para armazenar o append
+
+            for cliente in self.lista_clientes:
+                lista_clientes.append(cliente.to_dict()) # Adicione na nova lista 'lista_cleinte.append' a def 'to_dict'
+
+            salvar_json('dados/clientes.json', lista_clientes)  # 'salvar_json' é a função, sendo 'dados/clientes.json' == salve ass info. dentro do arquivo 'cleintes.json', que está na pasta 'dados' e lista_clientes armazena os dict's
+
             print('Cliente cadastrado na nossa base de dados')
 
             conta = Conta(cpf, saldo)
@@ -109,7 +118,7 @@ class Banco:
 
     def menu_principal(self):
         print('=' * 50)
-        print('=' * 20, 'BANCO DO BONIN', '=' * 20)
+        print('=' * 15, 'BANCO DO BONIN', '=' * 15)
         print('=' * 50)
         print()
         print('1 - Acessar área do servidor')
@@ -119,7 +128,7 @@ class Banco:
     def menu_servidor(self):
         print()
         print('=' * 50)
-        print('=' * 20,'ÁREA DO SERVIDOR', '=' * 20)
+        print('=' * 15,'ÁREA DO SERVIDOR', '=' * 15)
         print('=' * 50)
         print()
         print('1 - Cadastrar cliente')
@@ -132,7 +141,7 @@ class Banco:
     def menu_cliente(self):
         print()
         print('=' * 50)
-        print('=' * 20,'ÁREA DO SERVIDOR', '=' * 20)
+        print('=' * 15,'ÁREA DO CLIENTE', '=' * 15)
         print('=' * 50)
         print()
         print('1 - Consultar Saldo')

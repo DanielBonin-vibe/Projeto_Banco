@@ -39,10 +39,15 @@ while True:
 
     # Depositar
     elif opcao_cliente == '2':
-        valor_depósito = input('Informe o valor de depósito: ')
+        cpf = int(input('Informe o CPF (Apenas números): '))
+        valor_deposito = int(input('Informe o valor de depósito: '))
+        banco.depositar(cpf, valor_deposito)
 
     # Sacar
-    opcao_cliente == '3':
+    elif opcao_cliente == '3':
+        cpf = int(input('Informe o CPF (Apenas números): '))
+        valor_saque = int(input('Informe o valor de saque: '))
+        banco.sacar(cpf, valor_saque)
 
     # Transferir
     opcao_cliente == '4':

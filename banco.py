@@ -25,11 +25,6 @@ class Banco:
             print('Conta vinculada!')
 
 
-        # Aqui vai ficar o chamamento da criação da conta tbm!
-
-# Vamos por aqui uam função para criar uma conta vinculado a novo cliente automaticamente.
-
-
     def buscar_cliente(self, buscar_cpf):
         for cliente in self.lista_clientes:
 
@@ -60,9 +55,32 @@ class Banco:
                 return 'Este CPF não está vinculado a nenhuma conta'
 
 
-    def depositar(self):
+    def depositar(self, cpf, valor_deposito):
+        for conta in self.lista_contas:
+            if conta.cpf == cpf:
+                if valor_deposito >= 0:
+                    conta.saldo += valor_deposito
+                else: 
+                    return 'Não é possível depositar um valor menor que ou igual a 0'
+            else: 
+                return 'Não encontramos nenhuma conta vinculada ao CPF informado.'
+        return 'Depósito realizado com sucesso!'
 
-    def sacar(self):
+            
+    def sacar(self, cpf, valor_saque):
+        for conta in self.lista_contas:
+            if conta.cpf == cpf:
+                if valor_saque >= conta.saldo:
+                    conta.saldo -= valor_saque
+                    return ('Realizando saque...')
+
+                else: 
+                    return 'Não podemos sacar um valor maior que o saldo!'
+            else:
+                return 'Não encontramos nenhuma conta vinculada ao CPF informado.'
+        return ('Saque realizado com sucesso!')
+
+
 
     def transferir(self):
 

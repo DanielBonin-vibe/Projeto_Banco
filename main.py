@@ -50,7 +50,11 @@ while True:
         banco.sacar(cpf, valor_saque)
 
     # Transferir
-    opcao_cliente == '4':
+    elif opcao_cliente == '4':
+        chave_transferidor = input('Informe sua chave pix (id da conta): ')
+        chave_receptor = input('Informe a chave da conta a receber os valores(id conta): ')
+        valor_transferencia = input('Informe o valor a ser transferido: ')
+        banco.transferir(chave_transferidor, chave_receptor, valor_transferencia)
 
 
 

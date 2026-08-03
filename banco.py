@@ -82,7 +82,27 @@ class Banco:
 
 
 
-    def transferir(self):
+    def transferir(self, chave_transferidor, chave_receptor, valor_transferido):
+        for conta in self.lista_contas:
+            if chave_transferidor == conta.id_conta:
+
+                if valor_transferido > conta.saldo:
+                    return 'Não é possível transferir um valor maior que o saldo!'
+                
+                conta.saldo -= valor_transferido
+                print('Valor debitado')
+                break
+        else:
+            return 'Não encontramos nenhuma conta vinculada a esta chave.'
+    
+        for conta in self.lista_contas:
+            if chave_receptor == conta.id_conta:
+                conta.saldo += valor_transferido
+                return 'Transferência realizada com sucesso!'
+
+        return 'Não encontramos nenhuma conta vinculada a esta chave.'
+            
+
 
 ###################################################
 # Menus

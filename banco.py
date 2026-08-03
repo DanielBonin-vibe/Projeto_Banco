@@ -29,8 +29,17 @@ class Banco:
 
             print('Cliente cadastrado na nossa base de dados')
 
+        #######################################################################################################
+
             conta = Conta(cpf, saldo)
             self.lista_contas.append(conta)
+
+            lista_contas = []               # Criamos uma lista nova
+
+            for conta in self.lista_contas:
+                lista_contas.append(conta.to_dict())        # adicionamos a lista que criamos 'lista_contas' obedecendo o método 'to_dict' que a classe 'Conta' possui.
+
+            salvar_json('dados/contas.json', lista_contas)    # Chaamamos a função 'salvar_json' mostramos o caminho 'dados/contas.json' e mostramos a lista a ter os dict's
             print('Conta vinculada!')
 
 

@@ -9,3 +9,4 @@ def salvar_json(caminho, dados):  # Caminho é aonde o arquivo será salvo, dado
 def carregar_json(caminho):
     with open(caminho, 'r', encoding='utf-8') as arquivo:
         return json.load(arquivo)
+

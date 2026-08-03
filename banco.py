@@ -1,11 +1,42 @@
 from cliente import Cliente
 from conta import Conta
-from json_utils import salvar_json
+from json_utils import salvar_json, carregar_json
 
 class Banco:
     def __init__(self):
         self.lista_clientes = []
         self.lista_contas = []
+
+
+        self.carregar.dados() 
+
+        def carregar_json(self):
+            clientes = carregar_json('dados/clientes.json') # Chamamos a função que retorna uma lista de dicionários que guardamos em uma variável
+
+            if clientes:          # Verifica se algum cliente foi carregado
+                for cliente in clientes:
+                    cliente = Cliente(
+                    cliente['nome'],
+                    cliente['idade'],
+                    cliente['cpf'],
+                    cliente['id_cliente']
+                    )
+
+                    self.lista_clientes.append(cliente)
+
+            contas = carregar_json('dados/contas.json')     # Chamamos a função que retorna uma lista de dicionários que guardamos na variável 
+
+            if contas:           # Se houver alguma conta carregada, ele é True.
+                for conta in contas:
+                    conta = Conta(
+                    conta['cpf_titular'],
+                    conta['saldo_inicial'],
+                    conta['id_conta']
+                    )
+
+                    self.lista_contas.append(conta)
+
+
 
 ##################################################
 # Cliente

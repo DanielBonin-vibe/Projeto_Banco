@@ -1,4 +1,5 @@
 from cliente import Cliente
+from conta import Conta
 
 class Banco:
     def __init__(self):
@@ -7,20 +8,26 @@ class Banco:
 
 ##################################################
 # Cliente
-    def cadastrar_cliente(self, nome, idade, cpf):
+    def cadastrar_cliente(self, nome, idade, cpf, saldo):
 
         for cliente in self.lista_clientes:
-
             if cliente.cpf == cpf:
-                print('Não podemos cadastrar o mesmo cliente duas vezes')
-                break
+                return 'Não podemos cadastrar o mesmo cliente duas vezes'
+                
 
         else:
             cliente = Cliente(nome, idade, cpf)
             self.lista_clientes.append(cliente)
             print('Cliente cadastrado na nossa base de dados')
 
-# Vamos por aqui uam função para criar uma conat vinculado a novo cliente automaticamente.
+            conta = Conta(cpf, saldo)
+            self.lista_contas.append(conta)
+            print('Conta vinculada!')
+
+
+        # Aqui vai ficar o chamamento da criação da conta tbm!
+
+# Vamos por aqui uam função para criar uma conta vinculado a novo cliente automaticamente.
 
 
     def buscar_cliente(self, buscar_cpf):
@@ -41,10 +48,17 @@ class Banco:
             print(cliente)
 
 ##################################################
-# Conta 
-    def criar_conta(self, nome):
+# Conta
+        
 
-    def consultar_saldo(self):
+    def consultar_saldo(self, cpf):
+        for conta in self.lista_contas:
+            if conta.cpf == cpf:
+                return conta.saldo
+
+            else: 
+                return 'Este CPF não está vinculado a nenhuma conta'
+
 
     def depositar(self):
 
@@ -83,8 +97,9 @@ class Banco:
         print('=' * 20,'ÁREA DO SERVIDOR', '=' * 20)
         print('=' * 50)
         print()
-        print('1 - Criar conta')
-        print('2 - Consultar cliente')
-        print('3 - Listar clientes')
+        print('1 - Consultar Saldo')
+        print('2 - Realizar depósito')
+        print('3 - Realizar saque')
+        print('4 - Realizar transferência')
         print('0 - Voltar')
         return input('Digite a Ação requerida: ')

@@ -18,8 +18,8 @@ while True:
             nome = input('Digite o nome completo do cliente: ')
             idade = int(input('Digite a idade do cliente'))
             cpf = int(input('Digite o CPF do cliente(Apenas número): '))
-            banco.cadastrar_cliente(nome, idade, cpf)
-# Aind avai mudar um pouco aqui
+            saldo = float('Informe o saldo a ser transferido inicialmente: ')
+            banco.cadastrar_cliente(nome, idade, cpf, saldo)
 
 
         # Buscar Cliente:
@@ -33,20 +33,19 @@ while True:
             banco.listar_clientes()
 
 
-    # Criar Conta
-# Vais er posto no cadastrar cliente
-
     # Consultar Saldo
-    opcao_cliente == '2':
+    if opcao_cliente == '1':
+        banco.consultar_saldo()
 
     # Depositar
-    opcao_cliente == '3':
+    elif opcao_cliente == '2':
+        valor_depósito = input('Informe o valor de depósito: ')
 
     # Sacar
-    opcao_cliente == '4':
+    opcao_cliente == '3':
 
     # Transferir
-    opcao_cliente == '5':
+    opcao_cliente == '4':
 
 
 

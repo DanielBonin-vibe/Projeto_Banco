@@ -9,7 +9,7 @@ class Banco:
 # Cliente
     def cadastrar_cliente(self, nome, idade, cpf):
         banco_de_dados.cadastro_cliente(nome, idade, cpf)
-        print('Cliente cadastrado, siga com a abertura da conta')
+        print('Cliente cadastrado, siga com a abertura da conta...')
     def remover_cliente(self, id_cliente): 
         banco_de_dados.remover_cadastro(id_cliente)
 
@@ -22,9 +22,13 @@ class Banco:
 ##################################################
 # Conta
 
-    def abrir_conta(self, cpf_titular, saldo_inicial):
+    def abrir_conta(self, cpf_titular, saldo):
+        banco_de_dados.abertura_conta(cpf_titular, saldo)
+        print('Conta criada e vinculada!')
+    def fechar_conta(self, id_conta):
+        banco_de_dados.fechar_conta(id_conta)
+        print('Conta encerrada, esperamos encontrar-lo novamente!')
 
-    def fechar_conta(self, id_conta)
 ##################################################
 # Ações
         
@@ -60,9 +64,8 @@ class Banco:
         print('=' * 15,'ÁREA DO SERVIDOR', '=' * 15)
         print('=' * 50)
         print()
-        print('1 - Cadastrar cliente')
-        print('2 - Buscar cliente')
-        print('3 - Listar clientes')
+        print('1 - Buscar cliente')
+        print('2 - Listar clientes')
         print('0 - Voltar')
         return input('Informe a ação requerida: ')
         
@@ -77,6 +80,7 @@ class Banco:
         print('2 - Realizar depósito')
         print('3 - Realizar saque')
         print('4 - Realizar transferência')
+        print('5 - Fechar conta corrente.')
         print('0 - Voltar')
         return input('Digite a Ação requerida: ')
 

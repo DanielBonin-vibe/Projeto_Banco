@@ -48,7 +48,7 @@ def consultar_conta():
     conexao.commit()
     conexao.close()
 #################################################################
-# Cadastro
+# Cliente
 
 def cadastro_cliente(nome, idade, cpf):
     conexao = sqlite3.connect('database/biblioteca.db')
@@ -73,8 +73,29 @@ def remover_cadastro(id_cliente):
 
     conexao.commit()
     conexao.close()
-#################################################################
-def abertura_conta(cpf_titular, saldo_inicial):
-    ...
 
-def fechar_conta(id_conta)
+#################################################################
+# Conta:
+def abertura_conta(cpf_titular, saldo):
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    INSERT INTO conta(cpf_titular, saldo)
+    VALUES(?, ?)
+    """, (cpf_titular, saldo))
+
+    conexao.commit()
+    conexao.close()
+
+def fechar_conta(id_conta):
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    REMOVE FROM conta
+    WHERE id_conta = ?
+    """, (id_conta))
+
+    conexao.commit()
+    conexao.close()

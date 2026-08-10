@@ -18,7 +18,14 @@ while True:
         banco.abrir_conta(cpf_titular, saldo)
 
     elif opcao_inicial == 2:
-        ...
+        opcao_servidor = banco.menu_servidor()
+
+        if opcao_servidor == 1:
+            cpf_buscado = input('Informe o CPF do cliente: ')
+            banco.buscar_cliente(cpf_buscado)
+            
+        elif opcao_servidor == 2:
+            banco.listar_clientes()
 
     elif opcao_inicial == 3:
         opcao_cliente = banco.menu_cliente()
@@ -34,4 +41,7 @@ while True:
         elif opcao_cliente == 5:
             id_conta = int(input('Informe o ID da sua conta: '))
             banco.fechar_conta(id_conta)
+
+        
+
         

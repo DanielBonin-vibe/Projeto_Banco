@@ -13,10 +13,11 @@ class Banco:
     def remover_cliente(self, id_cliente): 
         banco_de_dados.remover_cadastro(id_cliente)
 
-    def buscar_cliente(self, buscar_cpf):
-        ...
+    def buscar_cliente(self, cpf_buscado):
+        banco_de_dados.buscar_cliente_e_conta(cpf_buscado)
+        
     def listar_clientes(self):
-        ...
+        banco_de_dados.listar_clientes()
 
 
 ##################################################

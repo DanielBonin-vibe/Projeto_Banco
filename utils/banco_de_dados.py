@@ -69,7 +69,7 @@ def remover_cadastro(id_cliente):
     cursor.execute("""
     DELETE FROM clientes
     WHERE id_cliente = ?
-    """, (id_cliente))
+    """, (id_cliente,))
 
     conexao.commit()
     conexao.close()
@@ -83,7 +83,7 @@ def abertura_conta(cpf_titular, saldo):
     cursor.execute("""
     INSERT INTO conta(cpf_titular, saldo)
     VALUES(?, ?)
-    """, (cpf_titular, saldo))
+    """, (cpf_titular, saldo,))
 
     conexao.commit()
     conexao.close()
@@ -95,7 +95,61 @@ def fechar_conta(id_conta):
     cursor.execute("""
     REMOVE FROM conta
     WHERE id_conta = ?
-    """, (id_conta))
+    """, (id_conta,))
 
     conexao.commit()
     conexao.close()
+
+def buscar_cliente_e_conta(cpf_buscado):
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()  
+
+    cursor.execute("""
+    SELECT cliente.nome, cliente.idade, cliente.cpf,
+    conta.id_conta, conta.saldo
+    FROM cliente
+    LEFT JOIN conta
+        ON cliente.cpf = conta.cpf_titular
+    WHERE cliente.cpf = ?
+    """, (cpf_buscado,))
+
+# No ON, ele quer dizer 'Pegue o CPF do cliente'
+# E procure esse mesmo CPF como titular da conta,s e forem iguais,
+# O SQLite entende que a conta pertence áquele cliente.
+
+    resultado = cursor.fetchone()
+
+    conexao.commit()
+    conexao.close()
+
+    print(resultado)
+
+def listar_clientes():
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()  
+
+    cursor.execute("""
+    SELECT * FROM cliente
+    """)
+
+    ditagem = cursor.fetchall()
+
+    for cliente in ditagem:
+        print(cliente)
+
+    cursor.execute("""
+    SELECT COUNT(*) FROM cliente
+    """)
+
+    quantidade = cursor.fetchone()
+
+    print(f'Total de clientes: {quantidade[0]}') # Precisamos especificar
+    # Count retorna apenas uma linha, por isso devemos passar o [0].
+
+    conexao.commit()
+    conexao.close()
+
+#############################################################
+# Ações:
+
+def 

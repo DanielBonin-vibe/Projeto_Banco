@@ -1,157 +1,34 @@
 from cliente import Cliente
 from conta import Conta
-from json_utils import salvar_json, carregar_json
+
 
 class Banco:
-    def __init__(self):
-        self.lista_clientes = []
-        self.lista_contas = []
-
-
-        self.carregar.dados() 
-
-        def carregar_json(self):
-            clientes = carregar_json('dados/clientes.json') # Chamamos a função que retorna uma lista de dicionários que guardamos em uma variável
-
-            if clientes:          # Verifica se algum cliente foi carregado
-                for cliente in clientes:
-                    cliente = Cliente(
-                    cliente['nome'],
-                    cliente['idade'],
-                    cliente['cpf'],
-                    cliente['id_cliente']
-                    )
-
-                    self.lista_clientes.append(cliente)
-
-            contas = carregar_json('dados/contas.json')     # Chamamos a função que retorna uma lista de dicionários que guardamos na variável 
-
-            if contas:           # Se houver alguma conta carregada, ele é True.
-                for conta in contas:
-                    conta = Conta(
-                    conta['cpf_titular'],
-                    conta['saldo_inicial'],
-                    conta['id_conta']
-                    )
-
-                    self.lista_contas.append(conta)
-
-
 
 ##################################################
 # Cliente
     def cadastrar_cliente(self, nome, idade, cpf, saldo):
-
-        for cliente in self.lista_clientes:
-            if cliente.cpf == cpf:
-                return 'Não podemos cadastrar o mesmo cliente duas vezes'
-                
-
-        else:
-            cliente = Cliente(nome, idade, cpf)
-            self.lista_clientes.append(cliente)
-
-            lista_clientes = [] # Criamos uma lista nova para armazenar o append
-
-            for cliente in self.lista_clientes:
-                lista_clientes.append(cliente.to_dict()) # Adicione na nova lista 'lista_cleinte.append' a def 'to_dict'
-
-            salvar_json('dados/clientes.json', lista_clientes)  # 'salvar_json' é a função, sendo 'dados/clientes.json' == salve ass info. dentro do arquivo 'cleintes.json', que está na pasta 'dados' e lista_clientes armazena os dict's
-
-            print('Cliente cadastrado na nossa base de dados')
-
-        #######################################################################################################
-
-            conta = Conta(cpf, saldo)
-            self.lista_contas.append(conta)
-
-            lista_contas = []               # Criamos uma lista nova
-
-            for conta in self.lista_contas:
-                lista_contas.append(conta.to_dict())        # adicionamos a lista que criamos 'lista_contas' obedecendo o método 'to_dict' que a classe 'Conta' possui.
-
-            salvar_json('dados/contas.json', lista_contas)    # Chaamamos a função 'salvar_json' mostramos o caminho 'dados/contas.json' e mostramos a lista a ter os dict's
-            print('Conta vinculada!')
-
-
+        ...
+    def remover_cliente(self): 
+        ...
     def buscar_cliente(self, buscar_cpf):
-        for cliente in self.lista_clientes:
-
-            if cliente.cpf == buscar_cpf:
-                print('Cliente encontrado: ')
-                print(cliente)
-                break
-
-            else: 
-                print('Cliente não foi encontrado.')
-
-            
-
+        ...
     def listar_clientes(self):
-        for cliente in self.lista_clientes:
-            print(cliente)
-
+        ...
 ##################################################
 # Conta
         
-
     def consultar_saldo(self, cpf):
-        for conta in self.lista_contas:
-            if conta.cpf == cpf:
-                return conta.saldo
-
-            else: 
-                return 'Este CPF não está vinculado a nenhuma conta'
-
+        ...
 
     def depositar(self, cpf, valor_deposito):
-        for conta in self.lista_contas:
-            if conta.cpf == cpf:
-                if valor_deposito >= 0:
-                    conta.saldo += valor_deposito
-                else: 
-                    return 'Não é possível depositar um valor menor que ou igual a 0'
-            else: 
-                return 'Não encontramos nenhuma conta vinculada ao CPF informado.'
-        return 'Depósito realizado com sucesso!'
-
-            
+        ...
+  
     def sacar(self, cpf, valor_saque):
-        for conta in self.lista_contas:
-            if conta.cpf == cpf:
-                if valor_saque >= conta.saldo:
-                    conta.saldo -= valor_saque
-                    return ('Realizando saque...')
-
-                else: 
-                    return 'Não podemos sacar um valor maior que o saldo!'
-            else:
-                return 'Não encontramos nenhuma conta vinculada ao CPF informado.'
-        return ('Saque realizado com sucesso!')
-
-
+        ...
 
     def transferir(self, chave_transferidor, chave_receptor, valor_transferido):
-        for conta in self.lista_contas:
-            if chave_transferidor == conta.id_conta:
-
-                if valor_transferido > conta.saldo:
-                    return 'Não é possível transferir um valor maior que o saldo!'
-                
-                conta.saldo -= valor_transferido
-                print('Valor debitado')
-                break
-        else:
-            return 'Não encontramos nenhuma conta vinculada a esta chave.'
-    
-        for conta in self.lista_contas:
-            if chave_receptor == conta.id_conta:
-                conta.saldo += valor_transferido
-                return 'Transferência realizada com sucesso!'
-
-        return 'Não encontramos nenhuma conta vinculada a esta chave.'
+        ...
             
-
 
 ###################################################
 # Menus

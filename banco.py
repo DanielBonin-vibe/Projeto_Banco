@@ -33,14 +33,17 @@ class Banco:
 ##################################################
 # Ações
         
-    def consultar_saldo(self, cpf):
-        ...
+    def consultar_saldo(self, cpf_buscado):
+        banco_de_dados.consulta_saldo(cpf_buscado)
+        print('Ação concluída')
 
-    def depositar(self, cpf, valor_deposito):
-        ...
+    def depositar(self, cpf_do_titular, deposito):
+        banco_de_dados.deposito_saldo(cpf_do_titular, deposito)
+        print('Depósito concluído.')
   
-    def sacar(self, cpf, valor_saque):
-        ...
+    def sacar(self, cpf_do_titular, saque):
+        banco_de_dados.sacar_saldo(cpf_do_titular, saque)
+        print('Saque concluído.')
 
     def transferir(self, chave_transferidor, chave_receptor, valor_transferido):
         ...
@@ -85,18 +88,7 @@ class Banco:
         print('0 - Voltar')
         return input('Digite a Ação requerida: ')
 
-    def menu_desejo_ser_cliente(self):
-        print('=' * 50)
-        print('=' * 15,'ÁREA DE CADASTRO', '=' * 15)
-        print('=' * 50)
-        return self.tornar_se_cliente()
 
-    def tornar_se_cliente(self):
-        nome = input('Digite o nome completo do cliente: ')
-        idade = int(input('Digite a idade do cliente: '))
-        cpf = int(input('Digite o CPF do cliente(Apenas número): '))
-
-        return nome, idade, cpf
         
 
 

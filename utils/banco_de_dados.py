@@ -18,7 +18,7 @@ cursor.execute("""
 CREATE TABLE conta IF IT NOT EXISTS( 
     id_conta PRIMARY KEY AUTOINCREMENT,
     cpf_titular TEXT NOT NULL,
-    saldo_inicial INTERGER NOT NULL
+    saldo INTERGER NOT NULL
 
 FOREIGN KEY(cpf_titular) REFERENCES cliente_cpf(cpf))
 """)
@@ -74,6 +74,31 @@ def remover_cadastro(id_cliente):
     conexao.commit()
     conexao.close()
 
+def listar_clientes():
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()  
+
+    cursor.execute("""
+    SELECT * FROM cliente
+    """)
+
+    ditagem = cursor.fetchall()
+
+    for cliente in ditagem:
+        print(cliente)
+
+    cursor.execute("""
+    SELECT COUNT(*) FROM cliente
+    """)
+
+    quantidade = cursor.fetchone()
+
+    print(f'Total de clientes: {quantidade[0]}') # Precisamos especificar
+    # Count retorna apenas uma linha, por isso devemos passar o [0].
+
+    conexao.commit()
+    conexao.close()
+
 #################################################################
 # Conta:
 def abertura_conta(cpf_titular, saldo):
@@ -124,32 +149,69 @@ def buscar_cliente_e_conta(cpf_buscado):
 
     print(resultado)
 
-def listar_clientes():
+#############################################################
+# Ações:
+
+def consulta_saldo(cpf_buscado):
     conexao = sqlite3.connect('database/biblioteca.db')
-    cursor = conexao.cursor()  
+    cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM cliente
-    """)
+    SELECT saldo FROM conta
+    WHERE cpf_titular = ?
+    """, (cpf_buscado,))
 
-    ditagem = cursor.fetchall()
+    resultados = cursor.fetchall()
 
-    for cliente in ditagem:
-        print(cliente)
+    for saldo in resultados:
+        print(f'O saldo desta conta é {saldo[0]}')
+
+    conexao.close()
+
+def deposito_saldo(cpf_do_titular, deposito):
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT COUNT(*) FROM cliente
-    """)
+    SELECT saldo FROM conta
+    WHERE cpf_do_titular = ?
+    """, (cpf_do_titular,))
 
-    quantidade = cursor.fetchone()
+    resultado = cursor.fetchone()
 
-    print(f'Total de clientes: {quantidade[0]}') # Precisamos especificar
-    # Count retorna apenas uma linha, por isso devemos passar o [0].
+    saldo_inicial = resultado[0]
+    novo_saldo = saldo_inicial + deposito
 
+    cursor.execute("""
+    SELECT saldo FROM conta
+    SET saldo = ?
+    WHERE cpf_titular = ? 
+    """, (novo_saldo, cpf_do_titular))
+    
     conexao.commit()
     conexao.close()
 
-#############################################################
-# Ações:
+def sacar_saldo(cpf_do_titular, saque):
+    conexao = sqlite3.connect('database/biblioteca.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT saldo FROM conta
+    WHERE cpf_titular = ?
+    """, (cpf_do_titular,))
+
+    resultado = cursor.fetchone()
+
+    saldo_inicial = resultado[0]
+    novo_saldo = saldo_inicial - saque
+
+    cursor.execute("""
+    SELECT saldo FROM conta
+    SET saldo = ?
+    WHERE cpf_titular = ?
+    """, (novo_saldo, cpf_do_titular))
+
+    conexao.commit()
+    conexao.close()
 
 def 

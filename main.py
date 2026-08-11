@@ -1,6 +1,4 @@
 from banco import Banco
-from cliente import Cliente 
-from conta import Conta
 
 banco = Banco()
 
@@ -31,11 +29,16 @@ while True:
         opcao_cliente = banco.menu_cliente()
 
         if opcao_cliente == 1:
-            ...
+            cpf_buscado = input('Informe o CPF da conta: ')
+            banco.consultar_saldo(cpf_buscado)
         elif opcao_cliente == 2:
-            ...
+            cpf_do_titular = input('Informe o CPF do titular da conta: ')
+            deposito = input('Informe o valor do depósito')
+            banco.depositar(cpf_do_titular, deposito)
         elif opcao_cliente == 3:
-            ...
+            cpf_do_titular = input('Informe o CPF do titular da conta: ')
+            saque = input('Informe o valor do saque: ')
+            banco.sacar(cpf_do_titular, saque)
         elif opcao_cliente == 4:
             ...
         elif opcao_cliente == 5:

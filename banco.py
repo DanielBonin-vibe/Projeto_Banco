@@ -45,9 +45,9 @@ class Banco:
         banco_de_dados.sacar_saldo(cpf_do_titular, saque)
         print('Saque concluído.')
 
-    def transferir(self, chave_transferidor, chave_receptor, valor_transferido):
-        ...
-            
+    def transferir(self,cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
+        banco_de_dados.transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia)
+        print('Transferência concluída.')
 
 ###################################################
 # Menus

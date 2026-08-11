@@ -25,6 +25,9 @@ while True:
         elif opcao_servidor == 2:
             banco.listar_clientes()
 
+        else:
+            break   
+
     elif opcao_inicial == 3:
         opcao_cliente = banco.menu_cliente()
 
@@ -40,11 +43,19 @@ while True:
             saque = input('Informe o valor do saque: ')
             banco.sacar(cpf_do_titular, saque)
         elif opcao_cliente == 4:
-            ...
+            cpf_titular_transferidor = input('Informe o CPF do titular da conta a realizar a transferência: ')
+            cpf_titular_recebedor = input('Inform o CPF do titular da conta a receber a transferência: ')
+            transferencia = input('Informe o valor da transferência: ')
+            banco.transferir(cpf_titular_transferidor, cpf_titular_recebedor, transferencia)
         elif opcao_cliente == 5:
             id_conta = int(input('Informe o ID da sua conta: '))
             banco.fechar_conta(id_conta)
 
+        else:
+            break
+
+    else: 
+        break
         
 
         

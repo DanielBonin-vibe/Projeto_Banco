@@ -3,7 +3,7 @@ import sqlite3
 #####################
 # Tabelas:
 
-conexao = sqlite3.connect('database/biblioteca.db')
+conexao = sqlite3.connect('database/banco.db')
 cursor = conexao.cursor()
 
 cursor.execute("""
@@ -29,7 +29,7 @@ conexao.close()
 #########################################################
 
 def consultar_conta():
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     # SELECT mostra as ifnromçãoes que queremos mostrar, FROM aponta a tabela principal
@@ -51,7 +51,7 @@ def consultar_conta():
 # Cliente
 
 def cadastro_cliente(nome, idade, cpf):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
     
     cursor.execute("""
@@ -63,7 +63,7 @@ def cadastro_cliente(nome, idade, cpf):
     conexao.close()
 
 def remover_cadastro(id_cliente):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -75,7 +75,7 @@ def remover_cadastro(id_cliente):
     conexao.close()
 
 def listar_clientes():
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()  
 
     cursor.execute("""
@@ -102,7 +102,7 @@ def listar_clientes():
 #################################################################
 # Conta:
 def abertura_conta(cpf_titular, saldo):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -114,7 +114,7 @@ def abertura_conta(cpf_titular, saldo):
     conexao.close()
 
 def fechar_conta(id_conta):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -126,7 +126,7 @@ def fechar_conta(id_conta):
     conexao.close()
 
 def buscar_cliente_e_conta(cpf_buscado):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()  
 
     cursor.execute("""
@@ -153,7 +153,7 @@ def buscar_cliente_e_conta(cpf_buscado):
 # Ações:
 
 def consulta_saldo(cpf_buscado):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -169,7 +169,7 @@ def consulta_saldo(cpf_buscado):
     conexao.close()
 
 def deposito_saldo(cpf_do_titular, deposito):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -183,7 +183,7 @@ def deposito_saldo(cpf_do_titular, deposito):
     novo_saldo = saldo_inicial + deposito
 
     cursor.execute("""
-    SELECT saldo FROM conta
+    UPDATE conta
     SET saldo = ?
     WHERE cpf_titular = ? 
     """, (novo_saldo, cpf_do_titular))
@@ -192,7 +192,7 @@ def deposito_saldo(cpf_do_titular, deposito):
     conexao.close()
 
 def sacar_saldo(cpf_do_titular, saque):
-    conexao = sqlite3.connect('database/biblioteca.db')
+    conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -206,7 +206,7 @@ def sacar_saldo(cpf_do_titular, saque):
     novo_saldo = saldo_inicial - saque
 
     cursor.execute("""
-    SELECT saldo FROM conta
+    UPDATE conta
     SET saldo = ?
     WHERE cpf_titular = ?
     """, (novo_saldo, cpf_do_titular))
@@ -214,4 +214,39 @@ def sacar_saldo(cpf_do_titular, saque):
     conexao.commit()
     conexao.close()
 
-def 
+def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT saldo FROM conta 
+    WHERE cpf_titular = ?
+    """, (cpf_titular_transferidor,))
+
+    resultado = cursor.fetchone()
+    saldo_transferidor_inicial = resultado[0]
+    saldo_transferidor_final = saldo_transferidor_inicial - transferencia
+
+    cursor.execute("""
+    UPDATE conta
+    SET saldo = ?
+    WHERE cpf_titular = ?
+    """, (saldo_transferidor_final, cpf_titular_transferidor))
+
+    cursor.execute("""
+    SELECT saldo FROM conta
+    WHERE cpf_titular = ?
+    """, (cpf_titular_recebedor,))
+
+    resultado = cursor.fetchone()
+    saldo_recebedor_inicial = resultado[0]
+    saldo_recebedor_final = saldo_recebedor_inicial + transferencia
+
+    cursor.execute("""
+    UPDATE conta
+    SET saldo = ?
+    WHERE cpf_titular = ?
+    """, (saldo_recebedor_final, cpf_titular_recebedor))
+
+    conexao.commit()
+    conexao.close()

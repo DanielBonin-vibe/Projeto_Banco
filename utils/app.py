@@ -41,9 +41,34 @@ def listar_clientes_api():
 #############################################################
 # Contas: 
 
-@app.post('/contas')
+@app.post('/conta')
 def abertura_conta_api(conta: Conta):
 
     banco_de_dados.abertura_conta(conta)
 
     return conta
+
+@app.delete('/conta/{id_conta}')
+def fechar_conta_api(id_conta):
+
+    banco_de_dados.fechar_conta(id_conta)
+
+    return {'Mensagem': 'Conta fechada, até uma próxima!'}
+
+@app.get('/conta')
+def consultar_conta_api():
+
+    consulta = banco_de_dados.consultar_conta()
+
+    return consulta
+
+@app.get('/conta/{cpf_buscado}')
+def buscar_cliente_e_conta_api(cpf_buscado):
+
+    resultado = banco_de_dados.buscar_cliente_e_conta(cpf_buscado)
+
+    return resultado
+
+#################################################################
+# Ações: 
+

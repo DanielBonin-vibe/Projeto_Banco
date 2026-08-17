@@ -26,27 +26,8 @@ FOREIGN KEY(cpf_titular) REFERENCES cliente_cpf(cpf))
 conexao.commit() 
 conexao.close()
 
-#########################################################
 
-def consultar_conta():
-    conexao = sqlite3.connect('database/banco.db')
-    cursor = conexao.cursor()
 
-    # SELECT mostra as ifnromçãoes que queremos mostrar, FROM aponta a tabela principal
-    cursor.execute("""
-    SELECT cpf.cliente, conta.cpf_titular FROM cliente
-    JOIN conta
-        ON cliente.cpf = conta.cpf_titular
-    """)
-    # ON mostra a relação entre as duas colunas
-
-    consulta = cursor.fetchall()
-
-    for dado in consulta:
-        print(dado)
-
-    conexao.commit()
-    conexao.close()
 #################################################################
 # Cliente
 
@@ -114,6 +95,26 @@ def fechar_conta(id_conta):
     conexao.commit()
     conexao.close()
 
+
+def consultar_conta():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT cpf.cliente, conta.cpf_titular FROM cliente
+    JOIN conta
+        ON cliente.cpf = conta.cpf_titular
+    """)
+
+    consulta = cursor.fetchall()
+
+    for dado in consulta:
+        print(f"CPF do cliente: {dado[0]} | CPF do titular: {dado[1]}")
+
+    conexao.close()
+
+    return consulta
+
 def buscar_cliente_e_conta(cpf_buscado):
     conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()  
@@ -127,16 +128,11 @@ def buscar_cliente_e_conta(cpf_buscado):
     WHERE cliente.cpf = ?
     """, (cpf_buscado,))
 
-# No ON, ele quer dizer 'Pegue o CPF do cliente'
-# E procure esse mesmo CPF como titular da conta,s e forem iguais,
-# O SQLite entende que a conta pertence áquele cliente.
-
     resultado = cursor.fetchone()
 
-    conexao.commit()
     conexao.close()
 
-    print(resultado)
+    return resultado
 
 #############################################################
 # Ações:

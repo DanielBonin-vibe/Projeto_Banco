@@ -67,7 +67,7 @@ def remover_cadastro(id_cliente):
     cursor = conexao.cursor()
 
     cursor.execute("""
-    DELETE FROM clientes
+    DELETE FROM cliente
     WHERE id_cliente = ?
     """, (id_cliente,))
 

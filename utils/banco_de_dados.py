@@ -146,12 +146,14 @@ def consulta_saldo(cpf_buscado):
     WHERE cpf_titular = ?
     """, (cpf_buscado,))
 
-    resultados = cursor.fetchall()
+    resultado = cursor.fetchone()
 
-    for saldo in resultados:
+    for saldo in resultado:
         print(f'O saldo desta conta é {saldo[0]}')
 
     conexao.close()
+
+    return resultado
 
 def deposito_saldo(cpf_do_titular, deposito):
     conexao = sqlite3.connect('database/banco.db')
@@ -176,6 +178,8 @@ def deposito_saldo(cpf_do_titular, deposito):
     conexao.commit()
     conexao.close()
 
+    return novo_saldo
+
 def sacar_saldo(cpf_do_titular, saque):
     conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
@@ -198,6 +202,8 @@ def sacar_saldo(cpf_do_titular, saque):
 
     conexao.commit()
     conexao.close()
+
+    return novo_saldo
 
 def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
     conexao = sqlite3.connect('database/banco.db')
@@ -235,3 +241,5 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
 
     conexao.commit()
     conexao.close()
+
+    return saldo_recebedor_final

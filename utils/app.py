@@ -72,3 +72,30 @@ def buscar_cliente_e_conta_api(cpf_buscado):
 #################################################################
 # Ações: 
 
+@app.get('/conta/{cpf_buscado}')
+def consulta_saldo_api(cpf_buscado):
+
+    saldo = banco_de_dados.consultado_saldo(cpf_buscado)
+
+    return saldo
+
+@app.post('/conta/{cpf_do_titular}/{deposito}')
+def deposito_saldo_api(cpf_do_titular, deposito):
+
+    resultado = banco_de_dados.deposito_saldo(cpf_do_titular, deposito)
+
+    return resultado
+
+@app.post('conta/{cpf_do_titular}/{saque}')
+def sacar_saldo_api(cpf_do_titular, saque):
+
+    resultado = banco_de_dados.sacar_saldo(cpf_do_titular, saque)
+
+    return resultado
+
+@app.post('/conta/{cpf_titular_transferidor}/{cpf_titular_recebedor}/{transferencia}')
+def transferencia_api(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
+
+    resultado = banco_de_dados.transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia)
+
+    return resultado

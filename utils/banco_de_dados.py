@@ -82,22 +82,11 @@ def listar_clientes():
     SELECT * FROM cliente
     """)
 
-    ditagem = cursor.fetchall()
+    listagem = cursor.fetchall()
 
-    for cliente in ditagem:
-        print(cliente)
-
-    cursor.execute("""
-    SELECT COUNT(*) FROM cliente
-    """)
-
-    quantidade = cursor.fetchone()
-
-    print(f'Total de clientes: {quantidade[0]}') # Precisamos especificar
-    # Count retorna apenas uma linha, por isso devemos passar o [0].
-
-    conexao.commit()
     conexao.close()
+
+    return listagem
 
 #################################################################
 # Conta:

@@ -13,6 +13,9 @@ class Conta(BaseModel):
     cpf_titular: str
     saldo: int
 
+#########################################################
+# Cliente:
+
 @app.post('/cliente')
 def cadastrar_cliente_api(cliente: Cliente):
     
@@ -26,3 +29,21 @@ def remover_cliente_api(id_cliente):
     banco_de_dados.remover_cadastro(id_cliente)
 
     return {'Mensagem': 'Usuário removido!'}
+
+@app.get('/cliente')
+def listar_clientes_api():
+
+    listagem  = banco_de_dados.listar_clientes()
+
+    return listagem 
+
+
+#############################################################
+# Contas: 
+
+@app.post('/contas')
+def abertura_conta_api(conta: Conta):
+
+    banco_de_dados.abertura_conta(conta)
+
+    return conta

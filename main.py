@@ -1,9 +1,9 @@
 from banco import Banco
-
+from utils import menus
 banco = Banco()
 
 while True:
-    opcao_inicial = banco.menu_principal()
+    opcao_inicial = menus.menu_principal()
 
     if opcao_inicial == 1:
         nome = input('Informe o seu nome completo:')
@@ -16,7 +16,7 @@ while True:
         banco.abrir_conta(cpf_titular, saldo)
 
     elif opcao_inicial == 2:
-        opcao_servidor = banco.menu_servidor()
+        opcao_servidor = menus.menu_servidor()
 
         if opcao_servidor == 1:
             cpf_buscado = input('Informe o CPF do cliente: ')
@@ -29,7 +29,7 @@ while True:
             break   
 
     elif opcao_inicial == 3:
-        opcao_cliente = banco.menu_cliente()
+        opcao_cliente = menus.menu_cliente()
 
         if opcao_cliente == 1:
             cpf_buscado = input('Informe o CPF da conta: ')
@@ -53,6 +53,12 @@ while True:
 
         else:
             break
+
+    elif opcao_inicial == 4:
+        opcao_relatorio = menus.menu_relatorios()
+
+        if 
+
 
     else: 
         break

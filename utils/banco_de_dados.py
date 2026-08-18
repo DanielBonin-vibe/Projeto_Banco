@@ -243,3 +243,7 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
     conexao.close()
 
     return saldo_recebedor_final
+
+#########################################################################################
+# Relatórios;
+

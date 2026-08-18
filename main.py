@@ -1,5 +1,7 @@
 from banco import Banco
 from utils import menus
+from relatorios import validacao
+
 banco = Banco()
 
 while True:
@@ -55,10 +57,10 @@ while True:
             break
 
     elif opcao_inicial == 4:
-        opcao_relatorio = menus.menu_relatorios()
+        acesso = validacao.senha()
 
-        if 
-
+        if acesso:
+             menus.menu_relatorios()
 
     else: 
         break

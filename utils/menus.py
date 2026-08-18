@@ -18,7 +18,7 @@ def menu_servidor(self):
     print('1 - Buscar cliente')
     print('2 - Listar clientes')
     print('0 - Voltar')
-    return input('Informe a ação requerida: ')
+    return int(input('Informe a ação requerida: '))
         
 
 def menu_cliente(self):
@@ -34,7 +34,7 @@ def menu_cliente(self):
     print('5 - Fechar conta corrente.')
     print('0 - Voltar')
     print('=' * 50)
-    return input('Digite a Ação requerida: ')
+    return int(input('Digite a Ação requerida: '))
 
 def menu_relatorios(self):
     print()
@@ -46,4 +46,27 @@ def menu_relatorios(self):
     print('2 - Relatórios de Contas')
     print('0 - Voltar')
     print('=' * 50)
-    return input('Informe a ação requerida: ')
+    return int(input('Informe a ação requerida: '))
+
+def menu_relatorios_clientes(self):
+    print()
+    print('=' * 50)
+    print('=' * 15,'AMBIENTE DE RELATÓRIOS DOS CLIENTES', '=' * 15)
+    print('=' * 50)
+    print()
+    print('1 - Relatório padrão (Por ID)')
+    print('2 - Relatório por nome em ordem alfabética')
+    print('3 - Relatório por CPF')
+    print('4 - Relatório por idade')
+    print('5 - ')
+
+def menu_relatorios_contas(self):
+    print()
+    print('=' * 50)
+    print('=' * 15,'AMBIENTE DE RELATÓRIOS DAS CONTAS', '=' * 15)
+    print('=' * 50)
+    print()
+    print('1 - Relatório padrão (Por ID)')
+    print('2 - Relatório por maior saldo')
+    print('3 - ')
+    print('4 - ')

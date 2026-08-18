@@ -245,5 +245,121 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
     return saldo_recebedor_final
 
 #########################################################################################
-# Relatórios;
+# Relatórios:
 
+def relatorio_padrao_cliente():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * FROM cliente
+    """)
+
+    ordem = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT COUNT(*) FROM cliente
+    """)
+
+    total = cursor.fetchone()[0]
+
+    print('=' * 50)
+    print('=' * 15,'RELATÓRIO PADRÃO DE CLIENTES', '=' * 15)
+    print('=' * 50)
+    for cliente in ordem:
+        print(f'ID: {cliente[0]}')
+        print(f'NOME: {cliente[1]}')
+        print(f'IDADE: {cliente[2]}')
+        print(f'CPF: {cliente[3]}')
+    print(f'TOTAL DE CLIENTES LISTADOS: {total}')
+
+    conexao.close()
+
+def relatorio_nome_ordem_alfabetica_cliente():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * FROM cliente
+    ORDER BY nome ASC
+    """)
+
+    ordem = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT COUNT(*) FROM cliente
+    """)
+
+    total = cursor.fetchone()[0]
+
+    print('=' * 50)
+    print('=' * 15,'RELATÓRIO POR NOME DE CLIENTES', '=' * 15)
+    print('=' * 50)
+    for cliente in ordem:
+        print(f'ID: {cliente[0]}')
+        print(f'NOME: {cliente[1]}')
+        print(f'IDADE: {cliente[2]}')
+        print(f'CPF: {cliente[3]}')
+    print(f'TOTAL DE CLIENTES LISTADOS: {total}')
+
+    cursor.close()
+
+def relatorio_cpf_cliente():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * FROM cliente
+    ORDER cpf ASC
+    """)
+
+    ordem = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT COUNT(*) FROM cliente
+    """)
+
+    total = cursor.fetchone()[0]
+
+    print('=' * 50)
+    print('=' * 15,'RELATÓRIO POR CPF DE CLIENTES', '=' * 15)
+    print('=' * 50)
+    for cliente in ordem:
+        print(f'ID: {cliente[0]}')
+        print(f'NOME: {cliente[1]}')
+        print(f'IDADE: {cliente[2]}')
+        print(f'CPF: {cliente[3]}')
+    print(f'TOTAL DE CLIENTES LISTADOS: {total}')
+
+    cursor.close()
+
+def relatorio_faixa_etaria_cliente():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * 
+    CASE
+        WHEN idade BETWEEN 18 AND 25 THEN '18-25'
+        WHEN idade BETWEEN 26 AND 35 THEN '26-35'
+        WHEN idade BETWEEN 36 AND 50 THEN '36-50'
+        ELSE '51+'
+    END AS faixa_etaria
+    FROM CLIENTE
+    GROUP BY faixa_etaria
+    ORDER BY faixa_etaria
+    """)
+    # 'END AS faixa_etaria'  dá um nome para uma nova coluna criada pelo 'CASE'
+
+    faixas = cursor.fetchall()
+
+    print('=' * 50)
+    print('=' * 15, 'RELATÓRIO POR FAIXA ETÁRIA', '=' * 15)
+    print('=' * 50)
+
+    for faixa in faixas:
+        print(f'FAIXA ETÁRIA: {faixa[0]}')
+        print(f'TOTAL DE CLIENTES: {faixa[1]}')
+        print()
+
+    conexao.close()

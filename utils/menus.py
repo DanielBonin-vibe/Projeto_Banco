@@ -57,8 +57,7 @@ def menu_relatorios_clientes(self):
     print('1 - Relatório padrão (Por ID)')
     print('2 - Relatório por nome em ordem alfabética')
     print('3 - Relatório por CPF')
-    print('4 - Relatório por idade')
-    print('5 - ')
+    print('4 - Relatório por faixa etária')
 
 def menu_relatorios_contas(self):
     print()

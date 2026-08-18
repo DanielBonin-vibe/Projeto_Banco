@@ -67,5 +67,4 @@ def menu_relatorios_contas(self):
     print()
     print('1 - Relatório padrão (Por ID)')
     print('2 - Relatório por maior saldo')
-    print('3 - ')
-    print('4 - ')
+    print('3 - Relatório por nível da conta(Faixa de saldo')

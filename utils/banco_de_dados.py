@@ -247,6 +247,8 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
 #########################################################################################
 # Relatórios:
 
+# Cliente: 
+
 def relatorio_padrao_cliente():
     conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
@@ -339,12 +341,13 @@ def relatorio_faixa_etaria_cliente():
 
     cursor.execute("""
     SELECT * 
-    CASE
-        WHEN idade BETWEEN 18 AND 25 THEN '18-25'
-        WHEN idade BETWEEN 26 AND 35 THEN '26-35'
-        WHEN idade BETWEEN 36 AND 50 THEN '36-50'
-        ELSE '51+'
-    END AS faixa_etaria
+        CASE
+            WHEN idade BETWEEN 18 AND 25 THEN '18-25'
+            WHEN idade BETWEEN 26 AND 35 THEN '26-35'
+            WHEN idade BETWEEN 36 AND 50 THEN '36-50'
+            ELSE '51+'
+        END AS faixa_etaria
+        COUNT(*) AS total_clientes
     FROM CLIENTE
     GROUP BY faixa_etaria
     ORDER BY faixa_etaria
@@ -363,3 +366,69 @@ def relatorio_faixa_etaria_cliente():
         print()
 
     conexao.close()
+
+# Conta:
+
+def relatorio_padrao_conta():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * FROM conta
+    """)
+
+    ordem = cursor.fetchall()
+
+    for conta in ordem:
+        print(f'ID: {conta[0]}')
+        print(f'CPF TITULAR: {conta[1]}')
+        print(f'SALDO: {conta[2]}')
+
+    conexao.close()
+
+def relatorio_decrescente_saldo():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT * FROM conta
+    ORDER BY saldo DESC
+    """)
+
+    ordem = cursor.fetchall()
+
+    for conta in ordem:
+        print(f'ID: {conta[0]}')
+        print(f'CPF TITULAR: {conta[1]}')
+        print(f'SALDO: {conta[2]}')
+
+    conexao.close()
+
+def relatorio_faixa_saldo():
+    conexao = sqlite3.connect('database/banco.db')
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+    SELECT 
+        CASE
+            WHEN saldo BETWEEN 0 AND 5000 THEN 'Nível 1'
+            WHEN saldo BETWEEN 5001 and 20000 THEN 'Nível 2'
+            WHEN saldo BETWEEN 20001 and 50000 THEN 'Nível 3'
+            WHEN saldo BETWEEN 50001 and 250000 THEN 'Nìvel 4'
+            ELSE  'Nível 5'
+        END AS nivel_saldo
+        COUNT(*) total_contas
+    FROM conta
+    GROUP BY nivel_saldo
+    ORDER BY nivel_saldo
+    """)
+
+    faixas = cursor.fetchall()
+
+    print('=' * 50)
+    print('=' * 15, 'RELATÓRIO POR NÍVEL DA CONTA', '=' * 15)
+    print('=' * 50)
+    for faixa in faixas:
+        print(f'Nível da conta: {faixa[0]}')
+        print(f'Total de contas: {faixa[1]}')
+        print()

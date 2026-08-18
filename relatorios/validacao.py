@@ -46,13 +46,13 @@ while True:
         opcao_relatorio_contas = menus.menu_relatorios_contas()
 
         if opcao_relatorio_contas == 1:
-            ...
+            banco_de_dados.relatorio_padrao_conta()
 
         elif opcao_relatorio_contas == 2:
-            ...
+            banco_de_dados.relatorio_decrescente_saldo()
 
         elif opcao_relatorio_contas == 3:
-            ...
+            banco_de_dados.relatorio
 
         elif opcao_relatorio_contas == 4:
             ...

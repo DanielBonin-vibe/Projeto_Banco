@@ -52,8 +52,12 @@ def remover_cadastro(id_cliente):
     WHERE id_cliente = ?
     """, (id_cliente,))
 
+    quantidade = cursor.rowcount
+
     conexao.commit()
     conexao.close()
+
+    return quantidade
 
 def listar_clientes():
     conexao = sqlite3.connect('database/banco.db')
@@ -92,9 +96,12 @@ def fechar_conta(id_conta):
     WHERE id_conta = ?
     """, (id_conta,))
 
+    quantidade = cursor.rowcount
+
     conexao.commit()
     conexao.close()
 
+    return quantidade
 
 def consultar_conta():
     conexao = sqlite3.connect('database/banco.db')
@@ -206,6 +213,10 @@ def sacar_saldo(cpf_do_titular, saque):
     return novo_saldo
 
 def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
+
+    if cpf_titular_transferidor == cpf_titular_recebedor:
+        raise ValueError ('Não é possível transferir para a própria conta.')
+
     conexao = sqlite3.connect('database/banco.db')
     cursor = conexao.cursor()
 
@@ -215,6 +226,11 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
     """, (cpf_titular_transferidor,))
 
     resultado = cursor.fetchone()
+
+    if resultado is None:
+        conexao.close()
+        raise ValueError('Conta do transferidor não encontrada.')
+
     saldo_transferidor_inicial = resultado[0]
     saldo_transferidor_final = saldo_transferidor_inicial - transferencia
 
@@ -230,6 +246,11 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
     """, (cpf_titular_recebedor,))
 
     resultado = cursor.fetchone()
+
+    if resultado is None:
+        conexao.close()
+        raise ValueError('Conta do recebedor não encontrada.')
+
     saldo_recebedor_inicial = resultado[0]
     saldo_recebedor_final = saldo_recebedor_inicial + transferencia
 

@@ -1,17 +1,17 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 from utils import banco_de_dados
 
 app = FastAPI()
 
 class Cliente(BaseModel):
-    nome: str
-    idade: int
-    cpf: str
+    nome: str = Field(min_lenght=3)
+    idade: int = Field(gt=0)
+    cpf: str = Field(min_lenght=11, max_lenght=11, pattern=r"^\d{11}$")
 
 class Conta(BaseModel):
-    cpf_titular: str
-    saldo: int
+    cpf_titular: str = Field(min_lenght=11, max_lenght=11, pattern=r"^\d{11}$")
+    saldo: int 
 
 #########################################################
 # Cliente:
@@ -23,13 +23,16 @@ def cadastrar_cliente_api(cliente: Cliente):
 
     return cliente
 
-@app.delete('/cliente/{id_cliente}')
+@app.delete('/cliente/{id_cliente}', status_code=204)
 def remover_cliente_api(id_cliente):
 
-    banco_de_dados.remover_cadastro(id_cliente)
+    quantidade = banco_de_dados.remover_cadastro(id_cliente)
 
-    return {'Mensagem': 'Usuário removido!'}
-
+    if quantidade == 0:
+        raise HTTPException(
+            status_code=404,
+            detail='Usuário não encontrado.'
+        )
 @app.get('/cliente')
 def listar_clientes_api():
 
@@ -48,21 +51,25 @@ def abertura_conta_api(conta: Conta):
 
     return conta
 
-@app.delete('/conta/{id_conta}')
+@app.delete('/conta/{id_conta}', status_code=204)
 def fechar_conta_api(id_conta):
 
-    banco_de_dados.fechar_conta(id_conta)
+    quantidade = banco_de_dados.fechar_conta(id_conta)
 
-    return {'Mensagem': 'Conta fechada, até uma próxima!'}
+    if quantidade == 0:
+        raise HTTPException(
+            status_code=404,
+            detail='Conta não encontrada.'
+        )
 
-@app.get('/conta')
+@app.get('/conta', status_code=201)
 def consultar_conta_api():
 
     consulta = banco_de_dados.consultar_conta()
 
     return consulta
 
-@app.get('/conta/{cpf_buscado}')
+@app.get('/conta/buscar/{cpf_buscado}', status_code=201)
 def buscar_cliente_e_conta_api(cpf_buscado):
 
     resultado = banco_de_dados.buscar_cliente_e_conta(cpf_buscado)
@@ -72,14 +79,14 @@ def buscar_cliente_e_conta_api(cpf_buscado):
 #################################################################
 # Ações: 
 
-@app.get('/conta/{cpf_buscado}')
+@app.get('/conta/consulta-saldo{cpf_buscado}')
 def consulta_saldo_api(cpf_buscado):
 
     saldo = banco_de_dados.consultado_saldo(cpf_buscado)
 
     return saldo
 
-@app.post('/conta/{cpf_do_titular}/{deposito}')
+@app.post('/conta/deposito-saldo{cpf_do_titular}/{deposito}')
 def deposito_saldo_api(cpf_do_titular, deposito):
 
     resultado = banco_de_dados.deposito_saldo(cpf_do_titular, deposito)
@@ -93,9 +100,13 @@ def sacar_saldo_api(cpf_do_titular, saque):
 
     return resultado
 
-@app.post('/conta/{cpf_titular_transferidor}/{cpf_titular_recebedor}/{transferencia}')
+@app.post('/conta/transferencia/{cpf_titular_transferidor}/{cpf_titular_recebedor}/{transferencia}')
 def transferencia_api(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
-
-    resultado = banco_de_dados.transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia)
-
-    return resultado
+    try:
+        resultado = banco_de_dados.transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia)
+        return resultado
+    except ValueError as erro:
+        raise HTTPException(
+            status_code=400,
+            detail=str(erro)
+        )

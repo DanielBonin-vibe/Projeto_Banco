@@ -1,6 +1,6 @@
-def menu_principal(self):
+def menu_principal():
     print('=' * 50)
-    print('=' * 15, 'BANCO DO BONIN', '=' * 15)
+    print('=' * 16, 'BANCO DO BONIN', '=' * 16)
     print('=' * 50)
     print()
     print('1 - Desejo ser cliente')
@@ -9,7 +9,7 @@ def menu_principal(self):
     print('4 - Relatórios do sistema')
     return int(input('Informe a seleção desejada: '))
         
-def menu_servidor(self):
+def menu_servidor():
     print()
     print('=' * 50)
     print('=' * 15,'ÁREA DO SERVIDOR', '=' * 15)
@@ -21,7 +21,7 @@ def menu_servidor(self):
     return int(input('Informe a ação requerida: '))
         
 
-def menu_cliente(self):
+def menu_cliente():
     print()
     print('=' * 50)
     print('=' * 15,'ÁREA DO CLIENTE', '=' * 15)
@@ -36,7 +36,7 @@ def menu_cliente(self):
     print('=' * 50)
     return int(input('Digite a Ação requerida: '))
 
-def menu_relatorios(self):
+def menu_relatorios():
     print()
     print('=' * 50)
     print('=' * 15,'AMBIENTE DE RELATÓRIOS', '=' * 15)
@@ -48,7 +48,7 @@ def menu_relatorios(self):
     print('=' * 50)
     return int(input('Informe a ação requerida: '))
 
-def menu_relatorios_clientes(self):
+def menu_relatorios_clientes():
     print()
     print('=' * 50)
     print('=' * 15,'AMBIENTE DE RELATÓRIOS DOS CLIENTES', '=' * 15)
@@ -58,13 +58,15 @@ def menu_relatorios_clientes(self):
     print('2 - Relatório por nome em ordem alfabética')
     print('3 - Relatório por CPF')
     print('4 - Relatório por faixa etária')
+    return int(input('Informe a ação requerida: '))
 
-def menu_relatorios_contas(self):
+def menu_relatorios_contas():
     print()
     print('=' * 50)
-    print('=' * 15,'AMBIENTE DE RELATÓRIOS DAS CONTAS', '=' * 15)
+    print('=' * 13,'AMBIENTE DE RELATÓRIOS DAS CONTAS', '=' * 13)
     print('=' * 50)
     print()
     print('1 - Relatório padrão (Por ID)')
     print('2 - Relatório por maior saldo')
     print('3 - Relatório por nível da conta(Faixa de saldo')
+    return int(input('Informe a ação requerida: '))

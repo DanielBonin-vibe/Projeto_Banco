@@ -7,20 +7,20 @@ conexao = sqlite3.connect('database/banco.db')
 cursor = conexao.cursor()
 
 cursor.execute("""
-CREATE TABLE cliente IF IT NOT EXISTS(
-    id_cliente INTERGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS cliente(
+    id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    idade INTERGER NOT NULL,
+    idade INTEGER NOT NULL,
     cpf TEXT NOT NULL UNIQUE)
 """)
 
 cursor.execute("""
-CREATE TABLE conta IF IT NOT EXISTS( 
-    id_conta PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS conta( 
+    id_conta INTEGER PRIMARY KEY AUTOINCREMENT,
     cpf_titular TEXT NOT NULL,
-    saldo INTERGER NOT NULL
+    saldo INTEGER NOT NULL,
 
-FOREIGN KEY(cpf_titular) REFERENCES cliente_cpf(cpf))
+FOREIGN KEY(cpf_titular) REFERENCES cliente(cpf))
 """)
 
 conexao.commit() 

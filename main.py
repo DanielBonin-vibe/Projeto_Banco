@@ -4,10 +4,21 @@ from relatorios import validacao
 
 banco = Banco()
 
+print("1 - INICIO DO MAIN")
+
+banco = Banco()
+
+print("2 - BANCO CRIADO")
+
 while True:
+    print("ANTES DO MENU PRINCIPAL")
+
     opcao_inicial = menus.menu_principal()
 
+    print("OPÇÃO ESCOLHIDA:", opcao_inicial)
+
     if opcao_inicial == 1:
+
         nome = input('Informe o seu nome completo:')
         idade = input('Informe sua idade de nascimento: ')
         cpf = input('Informe seu CPF(Sem pontuação): ')
@@ -60,10 +71,9 @@ while True:
         acesso = validacao.senha()
 
         if acesso:
-             menus.menu_relatorios()
-
-    else: 
-        break
-        
+            validacao.relatorios()
+        else:
+            break
+            
 
         

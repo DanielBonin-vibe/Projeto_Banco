@@ -1,32 +1,4 @@
-import sqlite3
-
-#####################
-# Tabelas:
-
-conexao = sqlite3.connect('database/banco.db')
-cursor = conexao.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS cliente(
-    id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    idade INTEGER NOT NULL,
-    cpf TEXT NOT NULL UNIQUE)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS conta( 
-    id_conta INTEGER PRIMARY KEY AUTOINCREMENT,
-    cpf_titular TEXT NOT NULL,
-    saldo INTEGER NOT NULL,
-
-FOREIGN KEY(cpf_titular) REFERENCES cliente(cpf))
-""")
-
-conexao.commit() 
-conexao.close()
-
-
+from database.conexao_postgre import conectar
 
 #################################################################
 # Cliente
@@ -44,7 +16,7 @@ def cadastro_cliente(nome, idade, cpf):
     conexao.close()
 
 def remover_cadastro(id_cliente):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""

@@ -238,17 +238,18 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
 # Cliente: 
 
 def relatorio_padrao_cliente():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM cliente
+    SELECT * FROM clientes
+    ORDER BY id_cliente ASC
     """)
 
     ordem = cursor.fetchall()
 
     cursor.execute("""
-    SELECT COUNT(*) FROM cliente
+    SELECT COUNT(*) FROM clientes
     """)
 
     total = cursor.fetchone()[0]
@@ -263,21 +264,24 @@ def relatorio_padrao_cliente():
         print(f'CPF: {cliente[3]}')
     print(f'TOTAL DE CLIENTES LISTADOS: {total}')
 
+    cursor.close()
     conexao.close()
 
+    return ordem, total
+
 def relatorio_nome_ordem_alfabetica_cliente():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM cliente
+    SELECT * FROM clientes
     ORDER BY nome ASC
     """)
 
     ordem = cursor.fetchall()
 
     cursor.execute("""
-    SELECT COUNT(*) FROM cliente
+    SELECT COUNT(*) FROM clientes
     """)
 
     total = cursor.fetchone()[0]
@@ -293,20 +297,23 @@ def relatorio_nome_ordem_alfabetica_cliente():
     print(f'TOTAL DE CLIENTES LISTADOS: {total}')
 
     cursor.close()
+    conexao.close()
+
+    return ordem, total
 
 def relatorio_cpf_cliente():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM cliente
+    SELECT * FROM clientes
     ORDER cpf ASC
     """)
 
     ordem = cursor.fetchall()
 
     cursor.execute("""
-    SELECT COUNT(*) FROM cliente
+    SELECT COUNT(*) FROM clientes
     """)
 
     total = cursor.fetchone()[0]
@@ -322,9 +329,12 @@ def relatorio_cpf_cliente():
     print(f'TOTAL DE CLIENTES LISTADOS: {total}')
 
     cursor.close()
+    conexao.close()
+
+    return ordem, total
 
 def relatorio_faixa_etaria_cliente():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
@@ -336,11 +346,10 @@ def relatorio_faixa_etaria_cliente():
             ELSE '51+'
         END AS faixa_etaria
         COUNT(*) AS total_clientes
-    FROM CLIENTE
+    FROM clientes
     GROUP BY faixa_etaria
     ORDER BY faixa_etaria
     """)
-    # 'END AS faixa_etaria'  dá um nome para uma nova coluna criada pelo 'CASE'
 
     faixas = cursor.fetchall()
 
@@ -353,16 +362,20 @@ def relatorio_faixa_etaria_cliente():
         print(f'TOTAL DE CLIENTES: {faixa[1]}')
         print()
 
+    cursor.close()
     conexao.close()
+
+    return faixas
 
 # Conta:
 
 def relatorio_padrao_conta():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM conta
+    SELECT * FROM contas
+    ORDER BY id_conta ASC
     """)
 
     ordem = cursor.fetchall()
@@ -372,14 +385,17 @@ def relatorio_padrao_conta():
         print(f'CPF TITULAR: {conta[1]}')
         print(f'SALDO: {conta[2]}')
 
+    cursor.close()
     conexao.close()
 
+    return ordem
+
 def relatorio_decrescente_saldo():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * FROM conta
+    SELECT * FROM contas
     ORDER BY saldo DESC
     """)
 
@@ -390,23 +406,27 @@ def relatorio_decrescente_saldo():
         print(f'CPF TITULAR: {conta[1]}')
         print(f'SALDO: {conta[2]}')
 
+    cursor.close()
     conexao.close()
 
+    return ordem 
+
 def relatorio_faixa_saldo():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
     SELECT 
         CASE
-            WHEN saldo BETWEEN 0 AND 5000 THEN 'Nível 1'
-            WHEN saldo BETWEEN 5001 and 20000 THEN 'Nível 2'
-            WHEN saldo BETWEEN 20001 and 50000 THEN 'Nível 3'
-            WHEN saldo BETWEEN 50001 and 250000 THEN 'Nìvel 4'
-            ELSE  'Nível 5'
+            WHEN saldo < 0 THEN 'Saldo negativo'
+            WHEN saldo <= 5000 THEN 'Nível 1'
+            WHEN saldo <= 20000 THEN 'Nível 2'
+            WHEN saldo <= 50000 THEN 'Nível 3'
+            WHEN saldo <= 250000 THEN 'Nível 4'
+    ELSE 'Nível 5'
         END AS nivel_saldo
         COUNT(*) total_contas
-    FROM conta
+    FROM contas
     GROUP BY nivel_saldo
     ORDER BY nivel_saldo
     """)
@@ -420,3 +440,5 @@ def relatorio_faixa_saldo():
         print(f'Nível da conta: {faixa[0]}')
         print(f'Total de contas: {faixa[1]}')
         print()
+
+    return faixas

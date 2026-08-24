@@ -128,125 +128,109 @@ def buscar_cliente_e_conta(cpf_buscado):
 # Ações:
 
 def consulta_saldo(cpf_buscado):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT saldo FROM conta
-    WHERE cpf_titular = ?
+    SELECT saldo FROM contas
+    WHERE cpf_titular = %s
     """, (cpf_buscado,))
 
     resultado = cursor.fetchone()
 
-    for saldo in resultado:
-        print(f'O saldo desta conta é {saldo[0]}')
-
+    cursor.close()
     conexao.close()
 
     return resultado
 
 def deposito_saldo(cpf_do_titular, deposito):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT saldo FROM conta
-    WHERE cpf_do_titular = ?
-    """, (cpf_do_titular,))
+        UPDATE contas
+        SET saldo = saldo + %s
+        WHERE cpf_titular = %s
+        RETURNING saldo
+    """, (deposito, cpf_do_titular))
 
     resultado = cursor.fetchone()
 
-    saldo_inicial = resultado[0]
-    novo_saldo = saldo_inicial + deposito
-
-    cursor.execute("""
-    UPDATE conta
-    SET saldo = ?
-    WHERE cpf_titular = ? 
-    """, (novo_saldo, cpf_do_titular))
-    
     conexao.commit()
+    cursor.close()
     conexao.close()
 
-    return novo_saldo
+    if resultado:
+        return resultado[0]
+
+    return None
 
 def sacar_saldo(cpf_do_titular, saque):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT saldo FROM conta
-    WHERE cpf_titular = ?
-    """, (cpf_do_titular,))
+    UPDATE contas
+    SET saldo = saldo - %s
+    WHERE cpf_titular = %s
+    RETURNING saldo
+    """, (saque, cpf_do_titular))
 
     resultado = cursor.fetchone()
 
-    saldo_inicial = resultado[0]
-    novo_saldo = saldo_inicial - saque
-
-    cursor.execute("""
-    UPDATE conta
-    SET saldo = ?
-    WHERE cpf_titular = ?
-    """, (novo_saldo, cpf_do_titular))
-
     conexao.commit()
+    cursor.close()
     conexao.close()
 
-    return novo_saldo
+    if resultado:
+        return resultado[0]
+
+    return None
 
 def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
 
     if cpf_titular_transferidor == cpf_titular_recebedor:
         raise ValueError ('Não é possível transferir para a própria conta.')
 
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
-    cursor.execute("""
-    SELECT saldo FROM conta 
-    WHERE cpf_titular = ?
-    """, (cpf_titular_transferidor,))
+    try:
+        cursor.execute("""
+        UPDATE contas
+        SET saldo = saldo - %s
+        WHERE cpf_titular_transferidor = %s
+        RETURNING saldo
+        """, (transferencia, cpf_titular_transferidor))
 
-    resultado = cursor.fetchone()
+        resultado_transferidor = cursor.fetchone()
 
-    if resultado is None:
+        if resultado_transferidor is None:
+            raise ValueError("Conta do transferidor não encontrada.")
+
+        cursor.execute("""
+        UPDATE contas
+        SET saldo = saldo + %s
+        WHERE cpf_titular_recebedor = %s
+        RETURNING saldo
+        """, (transferencia, cpf_titular_recebedor))
+
+        resultado_recebedor = cursor.fetchone()
+
+        if resultado_recebedor is None:
+            raise ValueError('Conta do recebedor não encontrada.')
+
+        conexao.commit()
+
+        return resultado_recebedor[0]
+
+    except:
+        conexao.rollback()
+        raise
+
+    finally:
+        cursor.close()
         conexao.close()
-        raise ValueError('Conta do transferidor não encontrada.')
-
-    saldo_transferidor_inicial = resultado[0]
-    saldo_transferidor_final = saldo_transferidor_inicial - transferencia
-
-    cursor.execute("""
-    UPDATE conta
-    SET saldo = ?
-    WHERE cpf_titular = ?
-    """, (saldo_transferidor_final, cpf_titular_transferidor))
-
-    cursor.execute("""
-    SELECT saldo FROM conta
-    WHERE cpf_titular = ?
-    """, (cpf_titular_recebedor,))
-
-    resultado = cursor.fetchone()
-
-    if resultado is None:
-        conexao.close()
-        raise ValueError('Conta do recebedor não encontrada.')
-
-    saldo_recebedor_inicial = resultado[0]
-    saldo_recebedor_final = saldo_recebedor_inicial + transferencia
-
-    cursor.execute("""
-    UPDATE conta
-    SET saldo = ?
-    WHERE cpf_titular = ?
-    """, (saldo_recebedor_final, cpf_titular_recebedor))
-
-    conexao.commit()
-    conexao.close()
-
-    return saldo_recebedor_final
 
 #########################################################################################
 # Relatórios:

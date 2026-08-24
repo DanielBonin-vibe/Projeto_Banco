@@ -4,15 +4,16 @@ from database.conexao_postgre import conectar
 # Cliente
 
 def cadastro_cliente(nome, idade, cpf):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
     
     cursor.execute("""
-    INSERT INTO cliente(nome, idade, cpf)
-    VALUES( ?, ?, ?)
-    """, (nome, idade, cpf,))
+    INSERT INTO clientes(nome, idade, cpf)
+    VALUES(%s, %s, %s)
+    """, (nome, idade, cpf))
 
     conexao.commit()
+    cursor.close()
     conexao.close()
 
 def remover_cadastro(id_cliente):
@@ -20,27 +21,29 @@ def remover_cadastro(id_cliente):
     cursor = conexao.cursor()
 
     cursor.execute("""
-    DELETE FROM cliente
-    WHERE id_cliente = ?
+    DELETE FROM clientes
+    WHERE id_cliente = %s
     """, (id_cliente,))
 
     quantidade = cursor.rowcount
 
     conexao.commit()
+    cursor.close()
     conexao.close()
 
     return quantidade
 
 def listar_clientes():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()  
 
     cursor.execute("""
-    SELECT * FROM cliente
+    SELECT * FROM clientes
     """)
 
     listagem = cursor.fetchall()
 
+    cursor.close()
     conexao.close()
 
     return listagem

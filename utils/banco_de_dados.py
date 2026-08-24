@@ -51,67 +51,75 @@ def listar_clientes():
 #################################################################
 # Conta:
 def abertura_conta(cpf_titular, saldo):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    INSERT INTO conta(cpf_titular, saldo)
-    VALUES(?, ?)
-    """, (cpf_titular, saldo,))
+    INSERT INTO contas(cpf_titular, saldo)
+    VALUES (%s, %s)
+    """, (cpf_titular, saldo))
 
     conexao.commit()
+    cursor.close()
     conexao.close()
 
 def fechar_conta(id_conta):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    REMOVE FROM conta
-    WHERE id_conta = ?
+    REMOVE FROM contas
+    WHERE id_conta = %s
     """, (id_conta,))
 
     quantidade = cursor.rowcount
 
     conexao.commit()
+    cursor.close()
     conexao.close()
 
     return quantidade
 
 def consultar_conta():
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT cpf.cliente, conta.cpf_titular FROM cliente
-    JOIN conta
-        ON cliente.cpf = conta.cpf_titular
+    SELECT clientes.nome, clientes.cpf, contas.id_conta, contas.saldo FROM clientes
+    JOIN contas
+        ON clientes.cpf = contas.cpf_titular
     """)
 
     consulta = cursor.fetchall()
 
     for dado in consulta:
-        print(f"CPF do cliente: {dado[0]} | CPF do titular: {dado[1]}")
+        print(
+            f"Cliente: {dado[0]} | "
+            f"CPF: {dado[1]} | "
+            f"Conta: {dado[2]} | "
+            f"Saldo: R$ {dado[3]}"
+        )
 
+
+    cursor.close()
     conexao.close()
 
     return consulta
 
 def buscar_cliente_e_conta(cpf_buscado):
-    conexao = sqlite3.connect('database/banco.db')
+    conexao = conectar()
     cursor = conexao.cursor()  
 
     cursor.execute("""
-    SELECT cliente.nome, cliente.idade, cliente.cpf,
-    conta.id_conta, conta.saldo
-    FROM cliente
-    LEFT JOIN conta
-        ON cliente.cpf = conta.cpf_titular
-    WHERE cliente.cpf = ?
+    SELECT clientes.nome, clientes.idade, clientes.cpf, contas.id_conta, contas.saldo FROM clientes
+    JOIN contas
+        ON clientes.cpf = contas.cpf_titular
+    WHERE clientes.cpf = %s
     """, (cpf_buscado,))
 
     resultado = cursor.fetchone()
 
+    cursor.close()
     conexao.close()
 
     return resultado

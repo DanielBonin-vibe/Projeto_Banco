@@ -307,7 +307,7 @@ def relatorio_cpf_cliente():
 
     cursor.execute("""
     SELECT * FROM clientes
-    ORDER cpf ASC
+    ORDER BY cpf ASC
     """)
 
     ordem = cursor.fetchall()
@@ -338,13 +338,14 @@ def relatorio_faixa_etaria_cliente():
     cursor = conexao.cursor()
 
     cursor.execute("""
-    SELECT * 
+    SELECT 
         CASE
+            WHEN idade >= 17 THEN '-17'
             WHEN idade BETWEEN 18 AND 25 THEN '18-25'
             WHEN idade BETWEEN 26 AND 35 THEN '26-35'
             WHEN idade BETWEEN 36 AND 50 THEN '36-50'
             ELSE '51+'
-        END AS faixa_etaria
+        END AS faixa_etaria,
         COUNT(*) AS total_clientes
     FROM clientes
     GROUP BY faixa_etaria
@@ -423,8 +424,8 @@ def relatorio_faixa_saldo():
             WHEN saldo <= 20000 THEN 'Nível 2'
             WHEN saldo <= 50000 THEN 'Nível 3'
             WHEN saldo <= 250000 THEN 'Nível 4'
-    ELSE 'Nível 5'
-        END AS nivel_saldo
+            ELSE 'Nível 5'
+        END AS nivel_saldo,
         COUNT(*) total_contas
     FROM contas
     GROUP BY nivel_saldo

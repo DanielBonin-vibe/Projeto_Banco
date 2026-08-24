@@ -19,12 +19,12 @@ while True:
 
     if opcao_inicial == 1:
 
-        nome = input('Informe o seu nome completo:')
+        nome = input('Informe o seu nome completo: ')
         idade = input('Informe sua idade de nascimento: ')
-        cpf = input('Informe seu CPF(Sem pontuação): ')
+        cpf = input('Informe seu CPF: ')
         banco.cadastrar_cliente(nome, idade, cpf)
 
-        cpf_titular = input('Informe o CPF do titular da conta(Sem pontuação: )')
+        cpf_titular = input('Informe o CPF do titular da conta: ')
         saldo = input('informe o saldo inicial a ser depositado: ')
         banco.abrir_conta(cpf_titular, saldo)
 
@@ -49,7 +49,7 @@ while True:
             banco.consultar_saldo(cpf_buscado)
         elif opcao_cliente == 2:
             cpf_do_titular = input('Informe o CPF do titular da conta: ')
-            deposito = input('Informe o valor do depósito')
+            deposito = input('Informe o valor do depósito: ')
             banco.depositar(cpf_do_titular, deposito)
         elif opcao_cliente == 3:
             cpf_do_titular = input('Informe o CPF do titular da conta: ')

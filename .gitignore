@@ -1,0 +1,19 @@
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual
+venv/
+.venv/
+
+# Variáveis de ambiente / senhas
+.env
+
+# Banco SQLite antigo
+*.db
+
+# Backups do PostgreSQL
+*.backup
+
+# Configurações locais do VS Code
+.vscode/

@@ -49,7 +49,7 @@ def relatorios():
                 banco_de_dados.relatorio_padrao_conta()
 
             elif opcao_relatorio_contas == 2:
-                banco_de_dados.relatorio_descrescente_saldo()
+                banco_de_dados.relatorio_decrescente_saldo()
 
             elif opcao_relatorio_contas == 3:
                 banco_de_dados.relatorio_faixa_saldo()

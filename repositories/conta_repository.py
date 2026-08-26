@@ -1,6 +1,6 @@
 from database.conexao_postgre import conectar
 
-def abertura_conta(cpf_titular, saldo):
+def cadastro_conta(cpf_titular, saldo):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -25,7 +25,7 @@ def abertura_conta(cpf_titular, saldo):
         cursor.close()
         conexao.close()
 
-def fechar_conta(id_conta):
+def encerrar_conta(id_conta):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -50,45 +50,39 @@ def fechar_conta(id_conta):
         cursor.close()
         conexao.close()
 
-def consultar_conta():
+def listar_contas():
     conexao = conectar()
     cursor = conexao.cursor()
 
     try:
         cursor.execute("""
-        SELECT clientes.nome, clientes.cpf, contas.id_conta, contas.saldo FROM clientes
-        JOIN contas
-            ON clientes.cpf = contas.cpf_titular
+        SELECT * FROM contas
         """)
 
         resultado = cursor.fetchall()
-
-        conexao.commit()
 
         return resultado
 
     except Exception as erro:
         conexao.rollback()
-        print(f'Erro ao consulta conta: {erro}')
+        print(f'Erro ao listar contas: {erro}')
         return 0
 
     finally:
         cursor.close()
         conexao.close()
 
-def buscar_cliente_e_conta(cpf_buscado):
+
+def buscar_conta(cpf):
     conexao = conectar()
     cursor = conexao.cursor()  
     try:
         cursor.execute("""
-        SELECT clientes.nome, clientes.idade, clientes.cpf, contas.id_conta, contas.saldo FROM clientes
-        JOIN contas
-            ON clientes.cpf = contas.cpf_titular
-        WHERE clientes.cpf = %s
-        """, (cpf_buscado,))
+        SELECT * FROM contas
+        WHERE cpf_titular = %s
+        """, (cpf,))
 
         resultado = cursor.fetchone()
-        conexao.commit()
 
         return resultado
 
@@ -103,7 +97,7 @@ def buscar_cliente_e_conta(cpf_buscado):
 ###################################################################################
 # Ações bancárias:
 
-def consulta_saldo(cpf_buscado):
+def consultar_saldo(cpf):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -111,7 +105,7 @@ def consulta_saldo(cpf_buscado):
         cursor.execute("""
         SELECT saldo FROM contas
         WHERE cpf_titular = %s
-        """, (cpf_buscado,))
+        """, (cpf,))
 
         resultado = cursor.fetchone()
 
@@ -126,7 +120,7 @@ def consulta_saldo(cpf_buscado):
         conexao.close()
 
 
-def deposito_saldo(cpf_do_titular, deposito):
+def deposito_saldo(cpf_titular, deposito):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -136,7 +130,7 @@ def deposito_saldo(cpf_do_titular, deposito):
             SET saldo = saldo + %s
             WHERE cpf_titular = %s
             RETURNING saldo
-        """, (deposito, cpf_do_titular))
+        """, (deposito, cpf_titular))
 
         resultado = cursor.fetchone()
 
@@ -153,7 +147,7 @@ def deposito_saldo(cpf_do_titular, deposito):
         cursor.close()
         conexao.close()
 
-def sacar_saldo(cpf_do_titular, saque):
+def saque_saldo(cpf_titular, saque):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -163,7 +157,7 @@ def sacar_saldo(cpf_do_titular, saque):
         SET saldo = saldo - %s
         WHERE cpf_titular = %s
         RETURNING saldo
-        """, (saque, cpf_do_titular))
+        """, (saque, cpf_titular))
 
         resultado = cursor.fetchone()
 

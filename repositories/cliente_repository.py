@@ -20,11 +20,12 @@ def cadastro_cliente(nome, idade, cpf):
         conexao.rollback()
         print(f'Erro ao cadastrar cliente: {erro}')
         return 0
+    
     finally:
         cursor.close()
         conexao.close()
 
-def remover_cadastro(id_cliente):
+def remover_cadastro(cpf):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -32,7 +33,7 @@ def remover_cadastro(id_cliente):
         cursor.execute("""
         DELETE FROM clientes
         WHERE id_cliente = %s
-        """, (id_cliente,))
+        """, (cpf,))
 
         quantidade = cursor.rowcount
 

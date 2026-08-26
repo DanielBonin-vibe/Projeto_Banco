@@ -1,48 +1,41 @@
-from cliente import Cliente
-from conta import Conta
 from utils import banco_de_dados
-
+from services import cliente_service, conta_service
 
 class Banco:
 
-##################################################
-# Cliente
-    def cadastrar_cliente(self, nome, idade, cpf):
-        banco_de_dados.cadastro_cliente(nome, idade, cpf)
+    def cadastro_cliente(self, nome, idade, cpf):
+        cliente_service.cadastro_cliente_service(nome, idade, cpf)
         print('Cliente cadastrado, siga com a abertura da conta...')
-    def remover_cliente(self, id_cliente): 
-        banco_de_dados.remover_cadastro(id_cliente)
 
-    def buscar_cliente(self, cpf_buscado):
-        banco_de_dados.buscar_cliente_e_conta(cpf_buscado)
-        
+    def remover_cadastro(self, cpf): 
+        cliente_service.remover_cadastro_service(cpf)
+
     def listar_clientes(self):
-        banco_de_dados.listar_clientes()
-
+        cliente_service.listar_clientes_service()
 
 ##################################################
 # Conta
 
-    def abrir_conta(self, cpf_titular, saldo):
-        banco_de_dados.abertura_conta(cpf_titular, saldo)
-        print('Conta criada e vinculada!')
-    def fechar_conta(self, id_conta):
-        banco_de_dados.fechar_conta(id_conta)
-        print('Conta encerrada, esperamos encontrar-lo novamente!')
+    def cadastro_conta(self, cpf_titular, saldo):
+        conta_service.cadastro_conta_service(cpf_titular, saldo)
+       
+    def encerrar_conta(self, cpf):
+        conta_service.encerrar_conta_service(cpf)
+        
 
 ##################################################
 # Ações
         
-    def consultar_saldo(self, cpf_buscado):
-        banco_de_dados.consulta_saldo(cpf_buscado)
+    def consultar_saldo(self, cpf):
+        banco_de_dados.consulta_saldo(cpf)
         print('Ação concluída')
 
-    def depositar(self, cpf_do_titular, deposito):
-        banco_de_dados.deposito_saldo(cpf_do_titular, deposito)
+    def depositar(self, cpf_titular, deposito):
+        banco_de_dados.deposito_saldo(cpf_titular, deposito)
         print('Depósito concluído.')
   
-    def sacar(self, cpf_do_titular, saque):
-        banco_de_dados.sacar_saldo(cpf_do_titular, saque)
+    def sacar(self, cpf_titular, saque):
+        banco_de_dados.sacar_saldo(cpf_titular, saque)
         print('Saque concluído.')
 
     def transferir(self,cpf_titular_transferidor, cpf_titular_recebedor, transferencia):

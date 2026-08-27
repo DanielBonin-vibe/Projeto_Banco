@@ -25,25 +25,21 @@ def cadastro_conta(cpf_titular, saldo):
         cursor.close()
         conexao.close()
 
-def encerrar_conta(id_conta):
+def buscar_conta(cpf):
     conexao = conectar()
-    cursor = conexao.cursor()
-
+    cursor = conexao.cursor()  
     try:
         cursor.execute("""
-        REMOVE FROM contas
-        WHERE id_conta = %s
-        """, (id_conta,))
+        SELECT * FROM contas
+        WHERE cpf_titular = %s
+        """, (cpf,))
 
-        resultado = cursor.rowcount
-
-        conexao.commit()
+        resultado = cursor.fetchone()
 
         return resultado
 
     except Exception as erro:
-        conexao.rollback()
-        print(f'Erro ao fechar conta: {erro}')
+        print(f'Erro ao consultar conta: {erro}')
         return 0
 
     finally:
@@ -72,31 +68,6 @@ def listar_contas():
         cursor.close()
         conexao.close()
 
-
-def buscar_conta(cpf):
-    conexao = conectar()
-    cursor = conexao.cursor()  
-    try:
-        cursor.execute("""
-        SELECT * FROM contas
-        WHERE cpf_titular = %s
-        """, (cpf,))
-
-        resultado = cursor.fetchone()
-
-        return resultado
-
-    except Exception as erro:
-        print(f'Erro ao consultar conta: {erro}')
-        return 0
-
-    finally:
-        cursor.close()
-        conexao.close()
-
-###################################################################################
-# Ações bancárias:
-
 def consultar_saldo(cpf):
     conexao = conectar()
     cursor = conexao.cursor()
@@ -119,6 +90,32 @@ def consultar_saldo(cpf):
         cursor.close()
         conexao.close()
 
+def encerrar_conta(cpf):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    try:
+        cursor.execute("""
+        REMOVE FROM contas
+        WHERE id_conta = %s
+        """, (cpf,))
+
+        resultado = cursor.rowcount
+
+        conexao.commit()
+
+        return resultado
+
+    except Exception as erro:
+        conexao.rollback()
+        print(f'Erro ao fechar conta: {erro}')
+        return 0
+
+    finally:
+        cursor.close()
+        conexao.close()
+
+##################################################################################
 
 def deposito_saldo(cpf, deposito):
     conexao = conectar()

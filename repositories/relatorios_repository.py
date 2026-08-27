@@ -1,6 +1,6 @@
 from database.conexao_postgre import conectar
 
-def relatorio_padrao_cliente():
+def relatorio_geral_cliente():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -24,7 +24,7 @@ def relatorio_padrao_cliente():
         cursor.close()
         conexao.close()
 
-def relatorio_nome_ordem_alfabetica_cliente():
+def relatorio_ordem_alfabetica():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -48,7 +48,7 @@ def relatorio_nome_ordem_alfabetica_cliente():
         cursor.close()
         conexao.close()
 
-def relatorio_cpf_cliente():
+def relatorio_cpf():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -76,7 +76,7 @@ def relatorio_cpf_cliente():
         cursor.close()
         conexao.close()
 
-def relatorio_faixa_etaria_cliente():
+def relatorio_faixa_etaria():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -104,7 +104,7 @@ def relatorio_faixa_etaria_cliente():
         cursor.close()
         conexao.close()
 
-def relatorio_padrao_conta():
+def relatorio_geral_conta():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -122,7 +122,7 @@ def relatorio_padrao_conta():
         cursor.close()
         conexao.close()
 
-def relatorio_decrescente_saldo():
+def relatorio_saldo():
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -140,7 +140,7 @@ def relatorio_decrescente_saldo():
         cursor.close()
         conexao.close()
 
-def relatorio_faixa_saldo():
+def relatorio_nivel_conta():
     conexao = conectar()
     cursor = conexao.cursor()
 

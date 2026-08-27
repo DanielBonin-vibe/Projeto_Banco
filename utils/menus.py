@@ -59,7 +59,7 @@ def menu_relatorios():
     print('=' * 50)
     print()
     print('1 - Relatório de clientes')
-    print('2 - Relatório pde contas')
+    print('2 - Relatório de contas')
     print('0 - Voltar')
     return int(input('Informe a ação requerida: '))
 
@@ -83,7 +83,7 @@ def menu_relatorios_contas():
     print('=' * 50)
     print()
     print('1 - Relatório geral')
-    print('2 - Maior saldo')
+    print('2 - Ordem saldo')
     print('3 - Nível da conta')
     print('0 - Voltar')
     return int(input('Informe a ação requerida: '))

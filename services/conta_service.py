@@ -76,7 +76,7 @@ def deposito_saldo_service(cpf, deposito):
 
     return resultado
 
-def saque_saldo(cpf, saque):
+def saque_saldo_service(cpf, saque):
 
     if saque <= 0 :
         raise ValueError('Não é possível sacar valores menos ou iguais a 0.')
@@ -96,7 +96,7 @@ def saque_saldo(cpf, saque):
 
     return resultado
     
-def transferencia(cpf_transferidor, cpf_recebedor, transferencia):
+def transferencia_service(cpf_transferidor, cpf_recebedor, transferencia):
 
     if cpf_transferidor == cpf_recebedor:
         raise ValueError('Erro, CPF(s) iguais.')

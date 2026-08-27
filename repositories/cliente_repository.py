@@ -24,8 +24,30 @@ def cadastro_cliente(nome, idade, cpf):
     finally:
         cursor.close()
         conexao.close()
+        
+def listar_clientes():
+    conexao = conectar()
+    cursor = conexao.cursor()  
 
-def atualizar_cliente(cpf_atual, nome, idade, cpf):
+    try:
+        cursor.execute("""
+        SELECT * FROM clientes
+        """)
+
+        resultado = cursor.fetchall()
+
+        return resultado
+
+    except Exception as erro:
+        conexao.rollback()
+        print(f'erro ao listar clientes: {erro}')
+        return 0
+    
+    finally:
+        cursor.close()
+        conexao.close()
+
+def atualizar_cadastro(cpf_atual, nome, idade, cpf):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -47,28 +69,6 @@ def atualizar_cliente(cpf_atual, nome, idade, cpf):
         print(f'Erro ao atualizar cliente: {erro}')
         return 0
 
-    finally:
-        cursor.close()
-        conexao.close()
-        
-def listar_clientes():
-    conexao = conectar()
-    cursor = conexao.cursor()  
-
-    try:
-        cursor.execute("""
-        SELECT * FROM clientes
-        """)
-
-        resultado = cursor.fetchall()
-
-        return resultado
-
-    except Exception as erro:
-        conexao.rollback()
-        print(f'erro ao listar clientes: {erro}')
-        return 0
-    
     finally:
         cursor.close()
         conexao.close()

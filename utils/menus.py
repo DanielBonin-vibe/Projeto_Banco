@@ -17,10 +17,9 @@ def menu_cliente():
     print('=' * 50)
     print()
     print('1 - Cadastrar cliente')
-    print('2 - Buscar cliente')
-    print('3 - Listar clientes')
-    print('4 - Atualizar cliente')
-    print('5 - Excluir cliente')
+    print('2 - Listar clientes')
+    print('3 - Atualizar cliente')
+    print('4 - Excluir cliente')
     print('0 - Voltar')
     return int(input('Informe a ação requerida: '))
         

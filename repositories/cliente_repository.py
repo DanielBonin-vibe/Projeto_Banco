@@ -25,6 +25,54 @@ def cadastro_cliente(nome, idade, cpf):
         cursor.close()
         conexao.close()
 
+def atualizar_cliente(cpf_atual, nome, idade, cpf):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    try:
+        cursor.execute("""
+        UPDATE clientes
+        SET nome = %s, idade = %s, cpf = %s
+        WHERE cpf_atual = %s
+        """, (nome, idade, cpf, cpf_atual))
+
+        resultado = cursor.rowcount
+
+        conexao.commit()
+
+        return resultado
+    
+    except Exception as erro:
+        conexao.rollback()
+        print(f'Erro ao atualizar cliente: {erro}')
+        return 0
+
+    finally:
+        cursor.close()
+        conexao.close()
+        
+def listar_clientes():
+    conexao = conectar()
+    cursor = conexao.cursor()  
+
+    try:
+        cursor.execute("""
+        SELECT * FROM clientes
+        """)
+
+        resultado = cursor.fetchall()
+
+        return resultado
+
+    except Exception as erro:
+        conexao.rollback()
+        print(f'erro ao listar clientes: {erro}')
+        return 0
+    
+    finally:
+        cursor.close()
+        conexao.close()
+
 def remover_cadastro(cpf):
     conexao = conectar()
     cursor = conexao.cursor()
@@ -44,30 +92,6 @@ def remover_cadastro(cpf):
         print(f'Erro ao remover cliente: {erro}')
 
         return 0
-    finally:
-        cursor.close()
-        conexao.close()
-
-    return quantidade
-
-def listar_clientes():
-    conexao = conectar()
-    cursor = conexao.cursor()  
-
-    try:
-        cursor.execute("""
-        SELECT * FROM clientes
-        """)
-
-        resultado = cursor.fetchall()
-
-        return resultado
-
-    except Exception as erro:
-        conexao.rollback()
-        print(f'erro ao listar clientes: {erro}')
-        return 0
-    
     finally:
         cursor.close()
         conexao.close()

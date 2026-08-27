@@ -17,17 +17,17 @@ def cadastro_cliente_service(nome, idade, cpf):
 
     return resultado
 
-def remover_cadastro_service(cpf):
+def atualizar_cadastro_service(cpf_atual, nome, idade, cpf):
+    if idade < 18:
+        raise ValueError('É necessário ser  maior de idade.')
 
-    if not cpf:
-        raise ValueError('CPF inválido.')
-
-    resultado = cliente_repository.remover_cadastro(cpf)
+    resultado = cliente_repository.atualizar_cadastro(cpf_atual, nome, idade, cpf)
 
     if resultado == 0:
-        raise Exception ('Não possível remover o cliente.')
+        raise ValueError("Cliente não encontrado.")
 
     return resultado
+
 
 def listar_clientes_service():
 
@@ -37,3 +37,13 @@ def listar_clientes_service():
         raise Exception('Não foi possível listar os clientes.')
 
     return resultado 
+
+def remover_cadastro_service(cpf):
+
+    if not cpf:
+        raise ValueError('CPF inválido.')
+
+    resultado = cliente_repository.remover_cadastro(cpf)
+
+    if resultado == 0:
+        raise Exception ('Não possível remover o cliente.')

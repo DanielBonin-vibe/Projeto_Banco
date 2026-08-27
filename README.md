@@ -1,64 +1,62 @@
 # 🏦 Projeto Banco em Python
 
-Sistema bancário desenvolvido em **Python**, com foco no aprendizado e aplicação prática de programação, banco de dados, SQL, PostgreSQL e desenvolvimento de APIs REST.
+Sistema bancário desenvolvido em **Python**, utilizando **PostgreSQL** para persistência de dados, organização em camadas, separação de regras de negócio e uma API REST desenvolvida com **FastAPI**.
 
-O projeto foi construído de forma modular, utilizando funções, separação de responsabilidades e persistência de dados em PostgreSQL.
+O projeto foi criado com fins de estudo e vem sendo evoluído através de diferentes versões, acompanhando o aprendizado de Python, Banco de Dados, SQL, arquitetura de software e desenvolvimento de APIs.
 
 ---
 
 ## 📌 Sobre o projeto
 
-O **Projeto Banco** simula um sistema bancário capaz de realizar operações relacionadas a clientes, contas e movimentações financeiras.
+O **Projeto Banco** simula um sistema bancário capaz de gerenciar clientes, contas, operações financeiras e relatórios administrativos.
 
-O projeto iniciou utilizando SQLite e, durante sua evolução, foi migrado para **PostgreSQL**, permitindo o estudo de um sistema gerenciador de banco de dados mais robusto e utilizado em aplicações reais.
+A versão **4.0** representa uma grande refatoração da estrutura interna do projeto.
 
-Durante o desenvolvimento foram aplicados conceitos de:
+Entre as principais mudanças estão:
 
-* Python
-* PostgreSQL
-* SQL
-* Psycopg
-* CRUD
-* Chaves primárias e estrangeiras
-* Relacionamentos entre tabelas
-* `JOIN`
-* Consultas com filtros e ordenações
-* Transações
-* `COMMIT`
-* `ROLLBACK`
-* Funções
-* Modularização
-* APIs REST
-* FastAPI
-* Pydantic
-* Uvicorn
-* Tratamento e organização de dados
-* Relatórios administrativos
-* Validação de acesso
-
-O projeto foi desenvolvido em etapas, buscando evoluir gradualmente sua estrutura, organização e complexidade.
+* Migração definitiva do SQLite para PostgreSQL;
+* Criação da camada de `repositories`;
+* Criação da camada de `services`;
+* Separação entre acesso aos dados e regras de negócio;
+* Refatoração dos menus;
+* Refatoração do `main.py`;
+* Reorganização das operações bancárias;
+* Uso de variáveis de ambiente;
+* Remoção das credenciais do código-fonte;
+* Criação do `.gitignore`;
+* Organização das dependências através do `requirements.txt`;
+* Melhor separação de responsabilidades entre os módulos.
 
 ---
 
-# 🎯 Objetivos
+# 🎯 Objetivo
 
-O principal objetivo é desenvolver, na prática, um sistema que permita aplicar os conhecimentos adquiridos durante os estudos de Python, Banco de Dados e desenvolvimento de APIs.
+O principal objetivo do projeto é desenvolver, na prática, um sistema capaz de aplicar conceitos estudados durante o aprendizado de desenvolvimento de software.
 
-Entre os objetivos estão:
+Entre os conceitos praticados estão:
 
-* Desenvolver um sistema bancário funcional;
-* Trabalhar com persistência de dados utilizando PostgreSQL;
-* Praticar operações CRUD;
-* Trabalhar com relacionamentos entre tabelas;
-* Desenvolver consultas SQL;
-* Utilizar `JOIN`, `ORDER BY`, `GROUP BY`, `COUNT`, `CASE` e outros recursos do SQL;
-* Trabalhar com transações utilizando `COMMIT` e `ROLLBACK`;
-* Integrar Python com PostgreSQL através do Psycopg;
-* Criar uma API REST utilizando FastAPI;
-* Organizar o projeto em diferentes módulos;
-* Desenvolver relatórios administrativos;
-* Praticar separação de responsabilidades;
-* Evoluir progressivamente a arquitetura da aplicação.
+* Python;
+* PostgreSQL;
+* SQL;
+* CRUD;
+* Chaves primárias e estrangeiras;
+* Relacionamentos entre tabelas;
+* Transações;
+* Consultas com filtros;
+* `JOIN`;
+* `GROUP BY`;
+* `ORDER BY`;
+* Funções;
+* Modularização;
+* Separação de responsabilidades;
+* Repository Pattern;
+* Camada de Service;
+* Tratamento de exceções;
+* Variáveis de ambiente;
+* APIs REST;
+* FastAPI;
+* Pydantic;
+* Uvicorn.
 
 ---
 
@@ -66,251 +64,338 @@ Entre os objetivos estão:
 
 ## 👤 Clientes
 
-O sistema permite trabalhar com informações dos clientes, incluindo:
+O sistema possui funcionalidades relacionadas ao gerenciamento de clientes:
 
 * Cadastro de clientes;
-* Consulta de clientes;
-* Busca por CPF;
 * Listagem de clientes;
-* Remoção de cadastro;
-* Identificação através de CPF;
+* Atualização de dados;
+* Remoção de clientes;
+* Identificação através do CPF;
 * Relacionamento entre clientes e contas.
+
+As regras de negócio relacionadas aos clientes são tratadas pelos `services`, enquanto as operações diretamente relacionadas ao banco são realizadas pelos `repositories`.
 
 ---
 
 ## 🏦 Contas
 
-O sistema possui funcionalidades relacionadas às contas bancárias, como:
+O sistema permite realizar operações relacionadas às contas bancárias:
 
-* Criação de contas;
-* Consulta de contas;
-* Consulta de saldo;
-* Encerramento de conta;
-* Relacionamento entre conta e cliente.
+* Criar conta;
+* Buscar conta;
+* Listar contas;
+* Consultar saldo;
+* Encerrar conta;
+* Relacionar a conta ao CPF do titular.
 
-As contas são relacionadas aos clientes através de uma chave estrangeira utilizando o CPF do titular.
+O fluxo utilizado é:
+
+```text
+main.py
+   ↓
+service
+   ↓
+repository
+   ↓
+PostgreSQL
+```
 
 ---
 
 ## 💰 Operações bancárias
 
-O sistema permite realizar operações como:
+As movimentações financeiras foram separadas das funcionalidades de gerenciamento das contas.
 
-* Consulta de saldo;
+Atualmente estão disponíveis:
+
 * Depósitos;
 * Saques;
-* Transferências;
-* Encerramento de conta.
+* Transferências.
 
-As operações utilizam os dados armazenados no PostgreSQL.
+### Depósitos
 
-Os cálculos de saldo podem ser realizados diretamente através de comandos SQL, como:
+O sistema impede depósitos com valores menores ou iguais a zero.
 
-```sql
-SET saldo = saldo + valor
-```
+### Saques
 
-ou:
+Antes da realização de um saque são verificadas condições como:
 
-```sql
-SET saldo = saldo - valor
-```
+* Existência da conta;
+* Valor solicitado;
+* Saldo disponível.
 
-As transferências utilizam transações para garantir maior segurança na alteração dos dados.
+Não é permitido realizar um saque superior ao saldo existente.
 
-Caso toda a operação seja concluída corretamente:
+### Transferências
+
+As transferências trabalham com duas contas dentro de uma mesma transação.
+
+Entre as validações realizadas estão:
+
+* O valor deve ser maior que zero;
+* O transferidor deve possuir saldo suficiente;
+* Não é possível realizar transferência para a própria conta;
+* As duas contas devem participar corretamente da operação.
+
+O `commit` somente é realizado após a conclusão das duas etapas da transferência.
+
+Caso alguma parte da operação falhe, é utilizado `rollback`.
 
 ```text
-COMMIT
+Conta transferidora
+       ↓
+    débito
+       ↓
+Conta recebedora
+       ↓
+    crédito
+       ↓
+     commit
 ```
 
-confirma as alterações.
-
-Caso ocorra algum erro:
+Em caso de erro:
 
 ```text
-ROLLBACK
+erro
+ ↓
+rollback
 ```
-
-desfaz as alterações realizadas naquela transação.
 
 ---
 
-# 📊 Relatórios
+# 📊 Relatórios administrativos
 
 O projeto possui um ambiente separado para relatórios administrativos.
 
-O acesso ao ambiente de relatórios é protegido por uma senha específica e possui **limite de 3 tentativas de autenticação**.
+O acesso ao ambiente passa por uma validação de senha com limite de tentativas.
 
-## Relatórios de clientes
+```text
+Menu Principal
+      ↓
+Relatórios
+      ↓
+Validação
+      ↓
+Senha correta?
+   ├── Sim → Menu de relatórios
+   └── Não → Acesso negado
+```
 
-O sistema possui relatórios como:
+A própria função responsável pela validação controla o número de tentativas.
 
-* Relatório padrão de clientes;
-* Relatório de clientes em ordem alfabética;
+Como os relatórios atuais são compostos principalmente por consultas SQL, eles acessam diretamente o `relatorios_repository`, sem necessidade de uma camada de `service` exclusiva.
+
+---
+
+## 👤 Relatórios de clientes
+
+Entre os relatórios disponíveis estão:
+
+* Relatório geral de clientes;
+* Clientes em ordem alfabética;
 * Relatório por CPF;
 * Relatório por faixa etária.
 
-### Faixa etária
-
-O relatório por faixa etária utiliza recursos SQL para classificar os clientes em grupos:
-
-* 18 a 25 anos;
-* 26 a 35 anos;
-* 36 a 50 anos;
-* 51 anos ou mais.
-
-Nesse relatório são utilizados conceitos como:
-
-```text
-CASE
-WHEN
-THEN
-ELSE
-COUNT(*)
-GROUP BY
-ORDER BY
-```
+Os relatórios utilizam diferentes recursos SQL para organizar, filtrar e agrupar os dados.
 
 ---
 
-## Relatórios de contas
+## 🏦 Relatórios de contas
 
-O ambiente de relatórios também possui consultas relacionadas às contas, incluindo:
+Também estão disponíveis relatórios relacionados às contas:
 
-* Relatório padrão de contas;
-* Relatório por maior saldo;
+* Relatório geral de contas;
+* Relatório por saldo;
 * Relatório por nível de saldo.
 
-O relatório por nível de saldo utiliza `CASE` e `COUNT(*)` para classificar as contas de acordo com seus saldos.
-
-Também são considerados saldos negativos de acordo com as regras estabelecidas no sistema.
-
 ---
 
-# 🗄️ Banco de dados
+# 🗄️ Banco de Dados
 
-A partir da versão 3.0, o projeto utiliza **PostgreSQL** para persistência dos dados.
+O projeto utiliza **PostgreSQL** para persistência dos dados.
 
-A comunicação entre Python e PostgreSQL é realizada através da biblioteca:
+A comunicação entre Python e PostgreSQL é realizada através do:
 
 ```text
 psycopg
 ```
 
-A conexão com o banco fica centralizada no módulo:
-
-```text
-database/
-└── conexao_postgre.py
-```
-
-O projeto utiliza atualmente duas entidades principais:
-
-```text
-clientes
-contas
-```
-
-## Tabela `clientes`
-
-Possui informações como:
-
-```text
-id_cliente
-nome
-idade
-cpf
-```
-
-O CPF possui restrição `UNIQUE`, impedindo o cadastro de clientes com CPFs duplicados.
-
-## Tabela `contas`
-
-Possui:
-
-```text
-id_conta
-cpf_titular
-saldo
-```
-
-O saldo utiliza:
-
-```sql
-NUMERIC(12,2)
-```
-
-permitindo o armazenamento de valores monetários com duas casas decimais.
-
-A coluna `cpf_titular` possui uma `FOREIGN KEY` apontando para:
-
-```text
-clientes.cpf
-```
-
-garantindo o relacionamento entre clientes e contas.
-
----
-
-# 📄 Schema do banco
-
-A estrutura oficial das tabelas é armazenada em:
+A estrutura inicial das tabelas está definida em:
 
 ```text
 database/schema.sql
 ```
 
-O arquivo permite recriar a estrutura do banco PostgreSQL em outro ambiente.
+A conexão com o PostgreSQL fica centralizada em:
 
-Estrutura principal:
-
-```sql
-CREATE TABLE IF NOT EXISTS clientes (
-    id_cliente INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    idade INTEGER NOT NULL,
-    cpf VARCHAR(14) UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS contas (
-    id_conta INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    cpf_titular VARCHAR(14) NOT NULL,
-    saldo NUMERIC(12,2) NOT NULL DEFAULT 0.00,
-
-    CONSTRAINT fk_contas_clientes
-        FOREIGN KEY (cpf_titular)
-        REFERENCES clientes(cpf)
-);
+```text
+database/conexao_postgre.py
 ```
 
 ---
 
-# 💾 Backup do PostgreSQL
+# 🔐 Variáveis de ambiente
 
-O banco também pode ser exportado através do pgAdmin utilizando o formato de backup do PostgreSQL.
+As credenciais e configurações sensíveis não ficam armazenadas diretamente no código.
 
-O `schema.sql` é utilizado para armazenar a estrutura do banco, enquanto backups podem ser utilizados para transportar também os dados armazenados.
+Elas são definidas através de um arquivo:
 
-Arquivos de backup não devem ser enviados ao Git caso contenham dados reais.
+```text
+.env
+```
+
+Exemplo:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=projeto_banco
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+
+RELATORIOS_PASSWORD=sua_senha
+```
+
+As variáveis são carregadas utilizando:
+
+```python
+from dotenv import load_dotenv
+```
+
+e acessadas através de:
+
+```python
+os.getenv()
+```
+
+O arquivo `.env` é ignorado pelo Git e não deve ser enviado ao repositório.
 
 ---
 
-# 🌐 API REST
+# 🧱 Arquitetura
 
-O projeto possui uma API REST desenvolvida utilizando **FastAPI**.
+A versão 4.0 trouxe uma divisão mais clara das responsabilidades da aplicação.
 
-A API permite disponibilizar operações do sistema através de endpoints HTTP.
+## Database
 
-Tecnologias utilizadas nessa camada:
+A camada `database` contém os recursos relacionados à configuração do PostgreSQL.
 
-* FastAPI;
-* Pydantic;
-* Uvicorn;
-* Psycopg;
-* PostgreSQL.
+```text
+database/
+├── __init__.py
+├── conexao_postgre.py
+└── schema.sql
+```
 
-A camada da API está organizada separadamente:
+---
+
+## Repositories
+
+Os repositories são responsáveis pela comunicação direta com o banco.
+
+```text
+repositories/
+├── __init__.py
+├── cliente_repository.py
+├── conta_repository.py
+└── relatorios_repository.py
+```
+
+Entre suas responsabilidades estão:
+
+* `SELECT`;
+* `INSERT`;
+* `UPDATE`;
+* `DELETE`;
+* Consultas SQL;
+* Controle de `commit`;
+* Controle de `rollback`;
+* Retorno dos dados obtidos do PostgreSQL.
+
+As regras de negócio não devem ficar concentradas nessa camada.
+
+---
+
+## Services
+
+A camada de `services` fica entre a interface da aplicação e os repositories.
+
+```text
+services/
+├── __init__.py
+├── cliente_service.py
+└── conta_service.py
+```
+
+Ela é responsável por:
+
+* Validações;
+* Regras de negócio;
+* Verificação de condições;
+* Tratamento dos resultados dos repositories;
+* Impedir operações inválidas.
+
+Exemplo:
+
+```text
+Usuário
+   ↓
+main.py
+   ↓
+service
+   ↓
+repository
+   ↓
+PostgreSQL
+```
+
+---
+
+## Utils
+
+A pasta `utils` contém recursos auxiliares utilizados pela aplicação.
+
+Atualmente:
+
+```text
+utils/
+├── __init__.py
+└── menus.py
+```
+
+O arquivo `menus.py` é responsável pela apresentação das opções disponíveis ao usuário.
+
+---
+
+## Relatórios
+
+A pasta responsável pela parte administrativa contém a validação necessária para liberar o acesso aos relatórios.
+
+```text
+relatorios/
+├── __init__.py
+└── validacao.py
+```
+
+O fluxo dos relatórios é:
+
+```text
+main.py
+   ↓
+validacao.py
+   ↓
+menus
+   ↓
+relatorios_repository
+   ↓
+PostgreSQL
+```
+
+---
+
+## API
+
+O projeto também possui uma camada separada para a API REST:
 
 ```text
 api/
@@ -318,15 +403,91 @@ api/
 └── app.py
 ```
 
-Os modelos utilizados para validação dos dados são definidos com `BaseModel` do Pydantic.
+A API foi desenvolvida com **FastAPI** nas versões anteriores.
+
+A sua refatoração para utilizar integralmente a nova arquitetura de `services` e `repositories` está planejada para a versão **5.0**.
+
+---
+
+# 📁 Estrutura atual
+
+A estrutura da versão 4.0 está organizada da seguinte forma:
+
+```text
+Projeto_Banco/
+│
+├── api/
+│   ├── __init__.py
+│   └── app.py
+│
+├── database/
+│   ├── __init__.py
+│   ├── conexao_postgre.py
+│   └── schema.sql
+│
+├── relatorios/
+│   ├── __init__.py
+│   └── validacao.py
+│
+├── repositories/
+│   ├── __init__.py
+│   ├── cliente_repository.py
+│   ├── conta_repository.py
+│   └── relatorios_repository.py
+│
+├── services/
+│   ├── __init__.py
+│   ├── cliente_service.py
+│   └── conta_service.py
+│
+├── utils/
+│   ├── __init__.py
+│   └── menus.py
+│
+├── .env
+├── .gitignore
+├── cliente.py
+├── conta.py
+├── main.py
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# 🧭 Organização dos menus
+
+A aplicação possui um menu principal dividido em diferentes áreas:
+
+```text
+MENU PRINCIPAL
+│
+├── Clientes
+├── Contas
+├── Operações Bancárias
+├── Relatórios
+└── Sair
+```
+
+Cada área possui seu próprio submenu.
+
+O `main.py` é responsável pelo controle do fluxo entre os menus.
+
+O arquivo:
+
+```text
+utils/menus.py
+```
+
+fica responsável apenas pela apresentação e leitura das opções.
 
 ---
 
 # 🧠 Conceitos de SQL utilizados
 
-Durante o desenvolvimento foram utilizados diversos recursos do SQL:
+Durante o desenvolvimento foram utilizados recursos como:
 
-```text
+```sql
 SELECT
 INSERT
 UPDATE
@@ -346,124 +507,101 @@ THEN
 ELSE
 INNER JOIN
 LEFT JOIN
-PRIMARY KEY
-FOREIGN KEY
-UNIQUE
-NOT NULL
-DEFAULT
-NUMERIC
-RETURNING
 ```
 
-Também foram utilizados conceitos de transações:
+Também são trabalhados conceitos como:
 
-```text
-COMMIT
-ROLLBACK
-```
-
-Esses recursos são utilizados tanto nas operações do sistema quanto na geração de relatórios.
+* Chaves primárias;
+* Chaves estrangeiras;
+* Integridade referencial;
+* Relacionamentos;
+* Consultas;
+* Atualizações;
+* Transações;
+* `COMMIT`;
+* `ROLLBACK`.
 
 ---
 
-# 📁 Estrutura do projeto
+# 🔐 Segurança
 
-A estrutura atual do projeto está organizada aproximadamente da seguinte forma:
+A versão 4.0 trouxe melhorias relacionadas à proteção de informações sensíveis.
 
-```text
-Projeto_Banco/
-│
-├── api/
-│   ├── __init__.py
-│   └── app.py
-│
-├── database/
-│   ├── __init__.py
-│   ├── conexao_postgre.py
-│   └── schema.sql
-│
-├── relatorios/
-│   ├── __init__.py
-│   └── validacao.py
-│
-├── utils/
-│   ├── __init__.py
-│   ├── banco_de_dados.py
-│   └── menus.py
-│
-├── banco.py
-├── cliente.py
-├── conta.py
-├── main.py
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+Entre elas:
 
-Os arquivos `__init__.py` identificam os diretórios como pacotes Python e permitem uma organização mais clara dos módulos.
+* Remoção das credenciais PostgreSQL do código;
+* Uso de `.env`;
+* Uso de `python-dotenv`;
+* Proteção do `.env` através do `.gitignore`;
+* Validação de acesso aos relatórios;
+* Limite de tentativas para autenticação.
 
 ---
 
-# 🔐 Validação de acesso
+# 🌐 API REST
 
-O ambiente de relatórios possui autenticação própria.
+O Projeto Banco possui uma API REST criada com:
 
-O funcionamento é:
+* FastAPI;
+* Pydantic;
+* Uvicorn.
+
+A API continua presente na versão 4.0, porém não fez parte da grande refatoração arquitetural desta versão.
+
+A atualização da API para utilizar a nova estrutura será realizada na:
 
 ```text
-Usuário
-   ↓
-Solicitação de acesso aos relatórios
-   ↓
-Senha
-   ↓
-Senha correta?
-   ├── Sim → Acesso aos relatórios
-   └── Não → Nova tentativa
-                ↓
-             3 tentativas
-                ↓
-           Acesso negado
+Versão 5.0
 ```
 
-A validação foi separada da lógica dos relatórios para manter uma melhor organização do projeto.
+Entre as mudanças previstas estão:
+
+* Integração dos endpoints com os services;
+* Melhor tratamento das respostas HTTP;
+* Organização dos endpoints;
+* Atualização dos modelos Pydantic;
+* Tratamento de exceções;
+* Documentação da API;
+* Remoção de dependências da arquitetura antiga.
 
 ---
 
 # 🛠️ Tecnologias utilizadas
 
-| Tecnologia | Utilização                            |
-| ---------- | ------------------------------------- |
-| Python     | Linguagem principal                   |
-| PostgreSQL | Sistema gerenciador de banco de dados |
-| Psycopg    | Comunicação entre Python e PostgreSQL |
-| SQL        | Consultas e manipulação dos dados     |
-| FastAPI    | Desenvolvimento da API REST           |
-| Pydantic   | Validação e modelagem de dados        |
-| Uvicorn    | Servidor ASGI da API                  |
-| Git        | Versionamento do projeto              |
+| Tecnologia    | Utilização                        |
+| ------------- | --------------------------------- |
+| Python        | Linguagem principal               |
+| PostgreSQL    | Banco de dados                    |
+| SQL           | Consultas e manipulação dos dados |
+| Psycopg       | Comunicação com PostgreSQL        |
+| python-dotenv | Variáveis de ambiente             |
+| FastAPI       | Desenvolvimento da API REST       |
+| Pydantic      | Modelagem e validação de dados    |
+| Uvicorn       | Servidor ASGI                     |
+| Git           | Controle de versão                |
+| GitHub        | Hospedagem do repositório         |
 
 ---
 
 # 📦 Dependências
 
-As dependências externas utilizadas pelo projeto estão registradas no arquivo:
+As dependências utilizadas pelo projeto estão registradas no arquivo:
 
 ```text
 requirements.txt
 ```
 
-Conteúdo atual:
+Entre as principais estão:
 
 ```text
-psycopg[binary]
 fastapi
 uvicorn
 pydantic
+psycopg
+python-dotenv
 ```
 
-Para instalar todas as dependências:
+Para instalar as dependências:
 
 ```bash
 pip install -r requirements.txt
@@ -471,11 +609,84 @@ pip install -r requirements.txt
 
 ---
 
-# 🚀 Execução
+# 🚀 Como executar
 
-## Executar o sistema
+## 1. Clone o projeto
 
-Na raiz do projeto:
+```bash
+git clone <URL_DO_REPOSITORIO>
+```
+
+Entre no diretório:
+
+```bash
+cd Projeto_Banco
+```
+
+---
+
+## 2. Crie um ambiente virtual
+
+### Windows
+
+```bash
+python -m venv .venv
+```
+
+Ative:
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux/macOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+---
+
+## 3. Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 4. Configure o PostgreSQL
+
+Crie o banco utilizado pelo projeto.
+
+Depois execute:
+
+```text
+database/schema.sql
+```
+
+para criar as tabelas necessárias.
+
+---
+
+## 5. Configure o `.env`
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=projeto_banco
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+
+RELATORIOS_PASSWORD=sua_senha
+```
+
+---
+
+## 6. Execute a aplicação
 
 ```bash
 python main.py
@@ -483,155 +694,114 @@ python main.py
 
 ---
 
-## Executar a API
+# 📚 Evolução do projeto
 
-Como o arquivo da API está localizado em:
+O Projeto Banco vem sendo desenvolvido através de diferentes versões, com cada etapa representando novos conceitos e melhorias.
 
-```text
-api/app.py
-```
+## Versões iniciais
 
-a execução com Uvicorn é:
+As primeiras versões tiveram como foco:
 
-```bash
-uvicorn api.app:app --reload
-```
-
----
-
-# 🔄 Configuração do banco em outro computador
-
-Após clonar o projeto:
-
-```bash
-git clone <repositorio>
-```
-
-instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-Instale e configure o PostgreSQL.
-
-Depois crie o banco:
-
-```text
-projeto_banco
-```
-
-e execute o arquivo:
-
-```text
-database/schema.sql
-```
-
-para criar as tabelas.
-
-Caso exista um backup do PostgreSQL, ele também pode ser restaurado através do pgAdmin para recuperar os dados armazenados.
-
----
-
-# 🚫 Arquivos ignorados pelo Git
-
-O projeto possui um `.gitignore` para evitar o versionamento de arquivos locais ou desnecessários, como:
-
-```text
-__pycache__/
-*.pyc
-venv/
-.venv/
-.env
-*.db
-*.backup
-.vscode/
-```
-
----
-
-# 📚 Objetivo de aprendizado
-
-Este projeto faz parte dos estudos de **Python, Banco de Dados, PostgreSQL e desenvolvimento de APIs**.
-
-A ideia é evoluir o sistema progressivamente, começando por operações básicas e aumentando a complexidade através da aplicação prática de novos conceitos.
-
-O projeto também serve como base para praticar:
-
-* organização de projetos Python;
-* desenvolvimento de sistemas;
-* modelagem de banco de dados;
-* PostgreSQL;
-* SQL;
-* transações;
-* APIs REST;
-* integração entre aplicação e banco de dados;
-* análise de dados através de relatórios;
-* versionamento com Git.
-
----
-
-# 🔄 Evolução do projeto
-
-## Versão 1.0
-
-Primeira implementação do sistema bancário utilizando Python e operações básicas.
-
-## Versão 2.0
-
-Evolução do sistema com:
-
+* Fundamentos de Python;
+* Operações bancárias;
+* Persistência;
 * SQLite;
-* persistência de dados;
-* API REST;
-* FastAPI;
-* relatórios administrativos;
-* consultas SQL mais avançadas.
+* SQL;
+* Relatórios;
+* API REST.
+
+---
 
 ## Versão 3.0
 
-Migração da camada de persistência de SQLite para PostgreSQL.
+A versão 3.0 marcou a migração do banco:
 
-Principais alterações:
+```text
+SQLite
+   ↓
+PostgreSQL
+```
 
-* PostgreSQL 18;
-* integração através do Psycopg;
-* remoção da dependência principal do SQLite;
-* criação de `schema.sql`;
-* utilização de `NUMERIC(12,2)` para valores financeiros;
-* chaves estrangeiras no PostgreSQL;
-* utilização de `RETURNING`;
-* transações com `COMMIT` e `ROLLBACK`;
-* reorganização dos módulos;
-* criação da pasta `api`;
-* criação de `requirements.txt`;
-* criação de `.gitignore`;
-* suporte a backup e restauração do banco PostgreSQL.
+Essa mudança permitiu trabalhar com um sistema de banco de dados mais próximo dos utilizados em aplicações reais.
 
 ---
 
-# 🔜 Próximos passos
+## Versão 4.0
 
-Possíveis evoluções futuras:
+A versão 4.0 foi focada principalmente em **arquitetura, organização e segurança**.
 
-* melhorias na autenticação;
-* tratamento de erros mais completo;
-* validações adicionais;
-* melhorias na API REST;
-* documentação dos endpoints;
-* novos relatórios financeiros;
-* filtros avançados;
-* utilização de variáveis de ambiente para credenciais;
-* evolução da arquitetura do projeto;
-* estudo futuro de SQLAlchemy;
-* implementação de migrations.
+A aplicação passou de uma estrutura mais centralizada para:
+
+```text
+main.py
+   ↓
+services
+   ↓
+repositories
+   ↓
+PostgreSQL
+```
+
+Entre as mudanças realizadas estão:
+
+* Criação dos repositories;
+* Criação dos services;
+* Refatoração do `main.py`;
+* Refatoração dos menus;
+* Reorganização das operações bancárias;
+* Uso de transações;
+* Uso de `commit` e `rollback`;
+* Variáveis de ambiente;
+* `.gitignore`;
+* `requirements.txt`;
+* Melhor separação de responsabilidades.
 
 ---
 
-## 📌 Status do projeto
+# 🔄 Próximos passos — Versão 5.0
 
-**Versão atual: 3.0**
+A próxima etapa do projeto será focada na **API REST**.
 
-O projeto encontra-se em uma versão funcional utilizando **Python + PostgreSQL**, contendo operações bancárias, persistência de dados, API REST, relacionamentos entre tabelas, transações e ambiente administrativo de relatórios.
+A versão 5.0 deverá trazer:
 
-**Projeto desenvolvido para fins de estudo e prática de desenvolvimento em Python, Banco de Dados, PostgreSQL e APIs REST.**
+* Refatoração da FastAPI;
+* Integração da API com os services;
+* Melhor organização dos endpoints;
+* Tratamento de erros HTTP;
+* Melhorias nos modelos Pydantic;
+* Documentação dos endpoints;
+* Adaptação completa da API à arquitetura atual.
+
+---
+
+# 📌 Status do projeto
+
+**Versão atual: 4.0**
+
+A versão 4.0 possui:
+
+* PostgreSQL;
+* Repositories;
+* Services;
+* Gerenciamento de clientes;
+* Gerenciamento de contas;
+* Depósitos;
+* Saques;
+* Transferências;
+* Transações com `commit` e `rollback`;
+* Relatórios administrativos;
+* Validação de acesso;
+* Menus reorganizados;
+* `main.py` refatorado;
+* Variáveis de ambiente;
+* `.gitignore`;
+* `requirements.txt`;
+* API REST criada em versões anteriores.
+
+---
+
+# 📖 Finalidade
+
+Este projeto foi desenvolvido para fins de **estudo e prática de desenvolvimento de software**.
+
+A proposta é acompanhar a evolução de uma aplicação Python desde estruturas mais simples até uma organização com banco de dados relacional, separação de responsabilidades, segurança de configurações, arquitetura em camadas e desenvolvimento de APIs REST.

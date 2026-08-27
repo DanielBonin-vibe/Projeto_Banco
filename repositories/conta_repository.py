@@ -120,7 +120,7 @@ def consultar_saldo(cpf):
         conexao.close()
 
 
-def deposito_saldo(cpf_titular, deposito):
+def deposito_saldo(cpf, deposito):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -129,10 +129,9 @@ def deposito_saldo(cpf_titular, deposito):
             UPDATE contas
             SET saldo = saldo + %s
             WHERE cpf_titular = %s
-            RETURNING saldo
-        """, (deposito, cpf_titular))
+        """, (deposito, cpf))
 
-        resultado = cursor.fetchone()
+        resultado = cursor.rowcount
 
         conexao.commit()
 
@@ -147,7 +146,7 @@ def deposito_saldo(cpf_titular, deposito):
         cursor.close()
         conexao.close()
 
-def saque_saldo(cpf_titular, saque):
+def saque_saldo(cpf, saque):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -156,10 +155,9 @@ def saque_saldo(cpf_titular, saque):
         UPDATE contas
         SET saldo = saldo - %s
         WHERE cpf_titular = %s
-        RETURNING saldo
-        """, (saque, cpf_titular))
+        """, (saque, cpf))
 
-        resultado = cursor.fetchone()
+        resultado = cursor.rowcount
 
         conexao.commit()
 
@@ -169,15 +167,12 @@ def saque_saldo(cpf_titular, saque):
         conexao.rollback()
         print(f'Erro ao realizar saque: {erro}')
         return 0 
+    
     finally:
         cursor.close()
         conexao.close()
 
-def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia):
-
-    if cpf_titular_transferidor == cpf_titular_recebedor:
-        raise ValueError ('Não é possível transferir para a própria conta.')
-
+def transferencia(cpf_transferidor, cpf_recebedor, transferencia):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -186,33 +181,30 @@ def transferencia(cpf_titular_transferidor, cpf_titular_recebedor, transferencia
         UPDATE contas
         SET saldo = saldo - %s
         WHERE cpf_titular_transferidor = %s
-        RETURNING saldo
-        """, (transferencia, cpf_titular_transferidor))
+        """, (transferencia, cpf_transferidor))
 
-        resultado_transferidor = cursor.fetchone()
-
-        if resultado_transferidor is None:
-            raise ValueError("Conta do transferidor não encontrada.")
+        if cursor.rowcount == 0:
+            conexao.rollback()
+            return 0
 
         cursor.execute("""
         UPDATE contas
         SET saldo = saldo + %s
         WHERE cpf_titular_recebedor = %s
-        RETURNING saldo
-        """, (transferencia, cpf_titular_recebedor))
+        """, (transferencia, cpf_recebedor))
 
-        resultado_recebedor = cursor.fetchone()
-
-        if resultado_recebedor is None:
-            raise ValueError('Conta do recebedor não encontrada.')
+        if cursor.rowcount == 0:
+            conexao.rollback()
+            return 0
 
         conexao.commit()
 
-        return resultado_recebedor[0]
+        return 1
 
-    except:
+    except Exception as erro:
         conexao.rollback()
-        raise
+        print(f'Erro ao realizar transferência: {erro}')
+        return 0
 
     finally:
         cursor.close()

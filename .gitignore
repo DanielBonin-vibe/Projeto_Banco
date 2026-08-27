@@ -1,19 +1,29 @@
-# Cache do Python
+# Variáveis de ambiente
+.env
+.env.*
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Cache / compilados Python
 __pycache__/
 *.py[cod]
+*$py.class
 
-# Ambiente virtual
-venv/
-.venv/
+# Testes / cobertura
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Variáveis de ambiente / senhas
-.env
-
-# Banco SQLite antigo
-*.db
-
-# Backups do PostgreSQL
-*.backup
-
-# Configurações locais do VS Code
+# IDEs
 .vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
